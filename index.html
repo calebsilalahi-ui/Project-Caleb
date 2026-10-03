@@ -115,7 +115,28 @@
       will-change: clip-path;
     }
 
-    video { display: block; background: #000; object-fit: cover; }   /* black fallback until src resolves */
+    /* ---------- Logo reveals (slides 1 & 12) — pure GSAP/CSS on LOGO_RA.svg ---------- */
+    #s1 { background: #050505; }
+    #s12 { background: #000; }
+    .logo-stage { position: absolute; inset: 0; display: grid; place-items: center; }
+    .logo-stage > img, .logo-stage > .logo-layer { grid-area: 1 / 1; }
+    .logo-img { width: min(90vw, 1150px); height: auto; display: block; user-select: none; -webkit-user-drag: none; }
+
+    /* Slide 1 initial state (GSAP drives it from here; hidden so nothing flashes before it starts). */
+    #intro-stage { opacity: 0; --sx: -40%; }
+
+    /* The Light Sweep: a brightened twin of the logo, revealed only through a soft band mask that
+       travels left -> right. The mask follows the logo's own alpha, so only the artwork catches the light. */
+    .logo-shine {
+      filter: brightness(0) invert(1) drop-shadow(0 0 12px rgba(190, 200, 255, .9));   /* white-hot silhouette + bloom */
+      mix-blend-mode: screen;
+      pointer-events: none;
+      -webkit-mask-image: linear-gradient(100deg, transparent calc(var(--sx) - 15%), #000 var(--sx), transparent calc(var(--sx) + 15%));
+              mask-image: linear-gradient(100deg, transparent calc(var(--sx) - 15%), #000 var(--sx), transparent calc(var(--sx) + 15%));
+    }
+
+    /* Slide 12 initial state; the glow is attached by GSAP once the logo has appeared. */
+    #outro-logo { opacity: 0; }
 
     /* Scroll progress (logo-blue). */
     #progress { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 50; background: var(--ra-500); transform: scaleX(0); transform-origin: 0 50%; pointer-events: none; }
@@ -129,7 +150,7 @@
 
     @media (prefers-reduced-motion: reduce) { .matte { will-change: auto; } }
   </style>
-  <noscript><style>.cut, #outro-cta { opacity: 1 !important; } .matte { -webkit-clip-path: none !important; clip-path: none !important; }</style></noscript>
+  <noscript><style>.cut, #outro-cta { opacity: 1 !important; } .matte { -webkit-clip-path: none !important; clip-path: none !important; } #intro-stage, #outro-logo { opacity: 1 !important; }</style></noscript>
 </head>
 
 <body class="bg-black text-white antialiased">
@@ -137,23 +158,13 @@
 
   <main id="deck">
 
-    <!-- ===================== 01 — TITLE / HOOK (intro video) ===================== -->
-    <section id="s1" class="slide" data-type="video" aria-label="Revenue Academy — intro">
-      <!-- Inject the final MP4 URL into src before deployment. Black until it loads. -->
-      <video
-        id="intro-video"
-        class="absolute inset-0 w-full h-full"
-        style="object-fit: cover; background: #000;"
-        src="Intro_Reveal_Revenue_Academy.mp4"
-        autoplay
-        muted
-        playsinline
-        loop
-        preload="auto"
-        disablepictureinpicture
-        aria-hidden="true"
-      ></video>
-      <div id="scroll-cue" class="mono absolute bottom-6 left-1/2 -translate-x-1/2 text-[11px] text-white/70 flex flex-col items-center gap-2 pointer-events-none">
+    <!-- ===================== 01 — TITLE / HOOK (GSAP logo reveal on LOGO_RA.svg) ===================== -->
+    <section id="s1" class="slide" data-type="intro" aria-label="Revenue Academy — intro">
+      <div id="intro-stage" class="logo-stage">
+        <img class="logo-img" src="LOGO_RA.svg" alt="Revenue Academy" />
+        <img class="logo-img logo-shine" src="LOGO_RA.svg" alt="" aria-hidden="true" />
+      </div>
+      <div id="scroll-cue" class="mono absolute bottom-6 left-1/2 -translate-x-1/2 text-[11px] text-white/70 flex flex-col items-center gap-2 pointer-events-none" style="opacity:0">
         <span>Scroll</span><span class="block h-8 w-px bg-ra-500"></span>
       </div>
     </section>
@@ -480,20 +491,11 @@
       </div>
     </section>
 
-    <!-- ===================== 12 — SUMMARY (outro video) ===================== -->
-    <section id="s12" class="slide" data-type="video" aria-label="Revenue Academy — outro">
-      <!-- Inject the final MP4 URL into src before deployment. Black until it loads. No autoplay: started by ScrollTrigger onEnter. -->
-      <video
-        id="outro-video"
-        class="absolute inset-0 w-full h-full"
-        style="object-fit: cover; background: #000;"
-        src="Outro_Reveal_Revenue_Academy.mp4"
-        muted
-        playsinline
-        preload="auto"
-        disablepictureinpicture
-        aria-hidden="true"
-      ></video>
+    <!-- ===================== 12 — SUMMARY (GSAP logo reveal on LOGO_RA.svg, started by ScrollTrigger onEnter) ===================== -->
+    <section id="s12" class="slide" data-type="outro" aria-label="Revenue Academy — summary">
+      <div class="logo-stage">
+        <img id="outro-logo" class="logo-img" src="LOGO_RA.svg" alt="Revenue Academy" />
+      </div>
       <div id="outro-cta" class="absolute inset-x-0 bottom-0 p-5 md:p-10 pt-24 bg-gradient-to-t from-black to-transparent flex items-end justify-between gap-4 mono text-xs md:text-sm pointer-events-none">
         <span class="flex items-center gap-3"><span class="chip">12</span>12 / 12 · Summary</span>
         <span class="text-ra-200 text-right">Questions &amp; feedback welcome</span>
@@ -523,34 +525,66 @@
 
       const s1 = document.getElementById('s1');
       const s12 = document.getElementById('s12');
-      const introVideo = document.getElementById('intro-video');
-      const outroVideo = document.getElementById('outro-video');
+      const introStage = document.getElementById('intro-stage');
+      const scrollCue = document.getElementById('scroll-cue');
+      const outroLogo = document.getElementById('outro-logo');
       const outroCta = document.getElementById('outro-cta');
 
-      /* ================= Video helpers ================= */
-
-      // play() returns a promise that can reject (autoplay policy, missing/blank src, interrupted load).
-      // Never leak an unhandled rejection; retry once on first user input unless the source is broken.
-      function safePlay(video) {
-        video.muted = true; // muted playback is permitted without a user gesture
-        const attempt = video.play();
-        if (attempt && typeof attempt.catch === 'function') {
-          attempt.catch(function () {
-            if (video.error) return; // no/broken source -> stays on the black fallback
-            const events = ['pointerdown', 'keydown', 'touchstart', 'wheel'];
-            const retry = function () {
-              events.forEach(function (e) { window.removeEventListener(e, retry); });
-              video.play().catch(function () {});
-            };
-            events.forEach(function (e) { window.addEventListener(e, retry, { passive: true }); });
-          });
-        }
+      /* ================= SLIDE 1 — The Hook: camera pull-back + light sweep + handoff ================= */
+      const PULL_BACK = 2.5;   // seconds
+      const HOLD      = 1;     // seconds the finished logo is held before the handoff
+      const introTl = gsap.timeline({ paused: true });
+      if (reduceMotion) {
+        introTl.fromTo(introStage, { opacity: 0, scale: 1 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'none' })
+               .to(scrollCue, { opacity: 1, duration: 0.3 });
+      } else {
+        introTl
+          // 1. Camera pull-back: massively zoomed in -> settled.
+          .fromTo(introStage,
+            { scale: 4, opacity: 0, transformOrigin: '50% 50%' },
+            { scale: 1, opacity: 1, duration: PULL_BACK, ease: 'expo.out' }, 0)
+          // 2. Light sweep: a soft mask band travels left -> right across the logo's own alpha.
+          .fromTo(introStage, { '--sx': '-40%' }, { '--sx': '140%', duration: 1.9, ease: 'power2.inOut' }, 0.8)
+          // 3. Handoff: wait 1s after the pull-back, then fade the logo out before the user reaches Slide 2.
+          .to(introStage, { opacity: 0, duration: 0.5, ease: 'none' }, PULL_BACK + HOLD)
+          .to(scrollCue, { opacity: 1, duration: 0.4, ease: 'none' }, '>');
       }
 
-      /* ================= Summary CTA ================= */
+      // Start once the artwork is decoded so the zoom never begins on a blank/pop-in frame.
+      const logoReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
+      const decode = introStage.querySelector('img').decode ? introStage.querySelector('img').decode().catch(function () {}) : Promise.resolve();
+      Promise.race([Promise.all([decode, logoReady]), new Promise(function (r) { setTimeout(r, 1500); })]).then(function () { introTl.play(0); });
+
+      /* ================= SLIDE 12 — The Outro: rise-in + continuous pulsing glow ================= */
+      const GLOW_PEAK   = 'drop-shadow(0 0 20px rgba(59, 130, 246, 0.5))';
+      const GLOW_TROUGH = 'drop-shadow(0 0 8px rgba(59, 130, 246, 0.15))';
+      let glowTween = null;
+
       function showCta() { gsap.to(outroCta, { opacity: 1, duration: 0.1, ease: 'none', overwrite: true }); }
       function hideCta() { gsap.to(outroCta, { opacity: 0, duration: 0.1, ease: 'none', overwrite: true }); }
-      outroVideo.addEventListener('ended', showCta);
+      function resetOutro() {
+        if (glowTween) { glowTween.kill(); glowTween = null; }
+        gsap.killTweensOf(outroLogo);
+        gsap.set(outroLogo, { opacity: 0, y: 50, filter: 'none' });
+        hideCta();
+      }
+      function playOutro() {
+        resetOutro();
+        if (reduceMotion) {
+          gsap.set(outroLogo, { opacity: 1, y: 0, filter: GLOW_PEAK });
+          showCta();
+          return;
+        }
+        gsap.fromTo(outroLogo, { opacity: 0, y: 50 }, {
+          opacity: 1, y: 0, duration: 1.5, ease: 'power2.out',
+          onComplete: showCta,
+        });
+        // The glow begins as the logo appears and then loops continuously (peak = the specified drop-shadow).
+        glowTween = gsap.fromTo(outroLogo, { filter: GLOW_TROUGH }, {
+          filter: GLOW_PEAK, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 0.4,
+        });
+      }
+      gsap.set(outroLogo, { opacity: 0, y: 50 });
 
       /* ================= Slide 10: hockey-stick curve ================= */
       function buildCurveTimeline(slide) {
@@ -612,21 +646,12 @@
       document.querySelectorAll('#deck > section').forEach(function (slide) {
         const type = slide.dataset.type;
 
-        /* ---- SLIDE 1: fade to black via match cut, then unpin into Slide 2 ---- */
-        if (slide === s1) {
-          gsap.to(['#intro-video', '#scroll-cue'], {
-            opacity: 0,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: s1,
-              start: 'top top',
-              end: '+=60%',
-              pin: true,          // hold Slide 1 while it fades to black
-              pinSpacing: true,   // Slide 2 only arrives once the fade has finished (the unpin)
-              scrub: true,
-              onLeave: function () { introVideo.pause(); },
-              onEnterBack: function () { safePlay(introVideo); },
-            },
+        /* ---- SLIDE 1: time-based reveal; replay if the user scrolls back up to it ---- */
+        if (type === 'intro') {
+          ScrollTrigger.create({
+            trigger: s1, start: 'top 50%', end: 'bottom 50%',
+            onLeave: function () { introTl.pause(); },
+            onEnterBack: function () { gsap.set(scrollCue, { opacity: 0 }); introTl.restart(); },
           });
           return;
         }
@@ -651,36 +676,14 @@
           return;
         }
 
-        /* ---- SLIDE 12: the outro only starts when the user actually arrives ---- */
-        if (slide === s12) {
+        /* ---- SLIDE 12: no autoplay — the reveal fires only when the user arrives ---- */
+        if (type === 'outro') {
           ScrollTrigger.create({
             trigger: s12,
             start: 'top 50%',    // Slide 12 fills at least half the viewport -> the reveal is actually seen
-            onEnter: function () {
-              try { outroVideo.currentTime = 0; } catch (e) {}   // always reveal from frame 0
-              const attempt = document.getElementById('outro-video').play();
-              if (attempt && typeof attempt.catch === 'function') {
-                attempt.catch(function () {
-                  if (!outroVideo.error) safePlay(outroVideo);     // retry on first input unless src is missing
-                });
-              }
-            },
-            onLeaveBack: function () {
-              // Scrolled back above Slide 12: rewind so the reveal replays on re-entry.
-              outroVideo.pause();
-              try { outroVideo.currentTime = 0; } catch (e) {}
-              hideCta();
-            },
+            onEnter: playOutro,
+            onLeaveBack: resetOutro,   // scrolled back above: rewind so the reveal replays on re-entry
           });
-          // With no playable source (placeholder phase) the black frame still needs its Summary bar.
-          let ctaFallbackArmed = false;
-          const armCtaFallback = function () {
-            if (ctaFallbackArmed) return;
-            ctaFallbackArmed = true;
-            ScrollTrigger.create({ trigger: s12, start: 'top 50%', onEnter: showCta, onLeaveBack: hideCta });
-          };
-          outroVideo.addEventListener('error', armCtaFallback);
-          if (outroVideo.error || outroVideo.networkState === 3 /* NETWORK_NO_SOURCE */) armCtaFallback();
         }
       });
 
