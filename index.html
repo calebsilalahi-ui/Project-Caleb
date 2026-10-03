@@ -4,35 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Revenue Academy — Pitch Deck</title>
-  <meta name="description" content="Revenue Academy pitch deck. An academic simulation for a UPH College business project." />
-  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="Revenue Academy — the anti-university for digital income. An academic simulation for a UPH College business project." />
+  <meta name="theme-color" content="#faf8f5" />
+  <script>document.documentElement.classList.add('js');</script>
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 
   <script>
-    /* Palette sampled from LOGO_RA.svg (the Revenue Academy wordmark). */
+    /* THREE TOKENS ONLY. Everything else in this file is an alpha of one of these. */
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            accent: '#4048E8',   // blue accent for text on white (AA contrast)
-            ink: '#111827',      // primary text
-            ra: {
-              500: '#595FFF',   // wordmark top / primary periwinkle
-              400: '#7B80FE',
-              300: '#A8A9EA',
-              200: '#CACCFD',   // wordmark fade / lavender
-              100: '#F4F4FF',
-              blue: '#0547FD',  // logo progress dot
-              deep: '#2A1F9E',  // deep indigo-violet track-matte field
-            },
+            paper: '#faf8f5',   // 60%  warm off-white
+            ink: '#141414',     // 30%  near-black
+            accent: '#5158FE',  // 10%  the blue sampled from the logo wordmark
           },
           fontFamily: {
-            sans: ['"Inter Tight"', 'Helvetica Neue', 'Arial', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['Geist', 'system-ui', 'sans-serif'],
           },
         },
       },
@@ -41,468 +34,459 @@
 
   <style>
     :root {
-      --white: #ffffff;
-      --ink: #111827;                       /* headers + paragraphs */
-      --ink-2: rgba(17, 24, 39, .72);       /* secondary copy */
-      --ink-3: rgba(17, 24, 39, .52);       /* captions */
-      --line: rgba(17, 24, 39, .12);
-      --accent: #4048E8;                    /* primary blue accent text */
-      --ra-500: #595FFF;
-      --ra-400: #7B80FE;
-      --ra-300: #A8A9EA;
-      --ra-200: #CACCFD;
-      --ra-100: #F4F4FF;
-      --ra-deep: #2A1F9E;
-      /* Track matte: the colour OUTSIDE the expanding circle. The circle itself reveals the white slide. */
-      --matte-field: var(--ra-deep);
+      --paper: #faf8f5;
+      --ink: #141414;
+      --accent: #5158FE;
+      --expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --gutter: clamp(1.25rem, 4.2vw, 4.5rem);
+      /* z-index scale: systemic layers only */
+      --z-grain: 30;
+      --z-menu: 60;
+      --z-nav: 70;
     }
 
-    html, body, main { background: var(--white); color: var(--ink); margin: 0; overscroll-behavior: none; }
-    body { font-family: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
-    ::selection { background: var(--ra-500); color: #fff; }
+    html { background: var(--paper); scroll-behavior: auto; }
+    body { margin: 0; background: var(--paper); color: var(--ink); overflow-x: hidden;
+      font-family: 'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif; font-size: 1rem; line-height: 1.55;
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-variant-numeric: tabular-nums; }
+    ::selection { background: var(--accent); color: var(--paper); }
+    a { color: inherit; }
+    :focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; border-radius: 4px; }
+    .slide--ink :focus-visible, .theme-ink :focus-visible, .slide--accent :focus-visible, .menu :focus-visible { outline-color: var(--paper); }
+    .skip { position: fixed; left: 1rem; top: -4rem; z-index: var(--z-menu); background: var(--ink); color: var(--paper); padding: .6rem 1rem; border-radius: 999px; transition: top .4s var(--expo); }
+    .skip:focus { top: 1rem; }
 
-    /* ---------- Slide primitives ---------- */
-    /* Standard 100vh slide (svh stops mobile address-bar jumps from breaking pins). */
-    .slide { position: relative; width: 100%; height: 100vh; height: 100svh; overflow: hidden; background: var(--white); }
+    /* ---------- Film grain: one fixed, non-interactive overlay ---------- */
+    body::after { content: ''; position: fixed; inset: 0; z-index: var(--z-grain); pointer-events: none; opacity: .05; mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .9 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); }
 
-    /* Brutalist match-cut layer: hidden until its slide is active; GSAP toggles it in 0.1s. */
-    .cut { opacity: 0; }
+    /* ---------- Theme scopes (60 paper / 30 ink / 10 accent) ---------- */
+    .slide--paper { --fg: var(--ink); --bg: var(--paper); --line: rgba(20,20,20,.16); --mut: rgba(20,20,20,.64); }
+    .slide--ink, .theme-ink { --fg: var(--paper); --bg: var(--ink); --line: rgba(250,248,245,.22); --mut: rgba(250,248,245,.68); }
+    .slide--accent { --fg: var(--paper); --bg: var(--accent); --line: rgba(250,248,245,.45); --mut: rgba(250,248,245,.94); }
+    .slide--paper, .slide--ink, .slide--accent, .theme-ink { background: var(--bg); color: var(--fg); }
 
-    .shell { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 1.25rem; }
-    @media (min-width: 768px) { .shell { padding: 2.5rem; } }
-    .chrome { position: relative; display: flex; align-items: center; justify-content: space-between; }
-    .chrome img { height: 2rem; width: auto; filter: brightness(.8) saturate(1.35); }   /* firm up the wordmark's pale gradient tail on white */
-    @media (min-width: 768px) { .chrome img { height: 2.5rem; } }
-    .body { position: relative; }
+    /* ---------- Slide frame ---------- */
+    .slide { position: relative; min-height: 100svh; padding: clamp(6.5rem, 12svh, 8.5rem) var(--gutter) clamp(2.5rem, 7svh, 4.5rem);
+      display: flex; flex-direction: column; justify-content: center; overflow: hidden; }
+    .wrap { width: 100%; max-width: 1440px; margin-inline: auto; }
+    .matte-slide { height: 100svh; min-height: 0; padding: 0; display: block; background: var(--paper); }
+    .matte { position: absolute; inset: 0; padding: clamp(6.5rem, 12svh, 8.5rem) var(--gutter) clamp(2.5rem, 7svh, 4.5rem);
+      display: flex; flex-direction: column; justify-content: center;
+      -webkit-clip-path: circle(0% at 50% 50%); clip-path: circle(0% at 50% 50%); will-change: clip-path; }
 
-    /* ---------- Type ---------- */
-    /* Heavy grotesk + light italic emphasis, mirroring the wordmark ("Reve" heavy / "Academy" light italic). */
-    .h1x { color: var(--ink); font-weight: 800; letter-spacing: -0.045em; line-height: 0.92; font-size: clamp(2.75rem, 9.2vw, 10rem); text-wrap: balance; margin: 0; }
-    .h1x--m { font-size: clamp(2.1rem, 6vw, 6.25rem); }
-    .h1x em { font-style: italic; font-weight: 300; letter-spacing: -0.05em; padding-right: .06em;
-      background: linear-gradient(180deg, #4048E8 0%, #8C90FF 100%);
-      -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; }
-    .h1x .sub { display: block; margin-top: .35em; font-size: .36em; font-weight: 500; letter-spacing: -0.02em; line-height: 1.1; color: var(--accent); }
-    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.08em; }
-    .eyebrow { font-family: 'JetBrains Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: .08em;
-      font-size: .75rem; color: var(--accent); border-top: 2px solid var(--ink); padding-top: .75rem; margin: 0 0 1rem; }
-    @media (min-width: 768px) { .eyebrow { font-size: .875rem; } }
-    .support { margin: .9rem 0 0; max-width: 46rem; font-size: clamp(.95rem, 1.5vw, 1.25rem); line-height: 1.35; color: var(--ink-2); font-weight: 400; }
-    .num { font-weight: 800; letter-spacing: -0.04em; line-height: .95; font-size: clamp(1.6rem, 3.6vw, 3.25rem); color: var(--ink); }
-    .lbl { font-family: 'JetBrains Mono', ui-monospace, monospace; text-transform: uppercase; letter-spacing: .06em; font-size: .6875rem; color: var(--accent); }
-    .small { font-size: clamp(.78rem, 1.05vw, .95rem); line-height: 1.35; color: var(--ink-2); }
+    /* ---------- Type: premium serif for headings, clean sans for body ---------- */
+    .serif { font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif; font-weight: 400; letter-spacing: -0.028em; }
+    .d1 { font-size: clamp(3.2rem, 9.4vw, 11rem); line-height: .94; text-wrap: balance; margin: 0; }
+    .d2 { font-size: clamp(2.5rem, 6.2vw, 7.25rem); line-height: .98; text-wrap: balance; margin: 0; }
+    .d3 { font-size: clamp(2rem, 4.4vw, 5rem); line-height: 1.04; text-wrap: balance; margin: 0; }
+    .mega { font-size: clamp(7.5rem, 27vw, 31rem); line-height: .78; letter-spacing: -0.055em; margin: 0; }
+    h1, h2, h3 { font-weight: 400; margin: 0; }
+    em { font-style: italic; }
+    .lead { font-size: clamp(1.05rem, 1.55vw, 1.5rem); line-height: 1.5; max-width: 38em; color: var(--mut); font-weight: 400; margin: 0; }
+    .body-s { font-size: clamp(.9rem, 1.1vw, 1.0625rem); line-height: 1.55; color: var(--mut); margin: 0; }
+    .mut { color: var(--mut); }
+    .acc { color: var(--accent); }
+    .eyebrow { display: flex; align-items: center; gap: .9rem; margin: 0 0 clamp(1.4rem, 3.4svh, 2.6rem);
+      font-weight: 500; font-size: .75rem; letter-spacing: .2em; text-transform: uppercase; line-height: 1; }
+    .eyebrow .hair { flex: 0 0 3.5rem; height: 1px; background: currentColor; opacity: .45; transform-origin: left center; }
+    .w { display: inline-block; will-change: transform; }
 
-    /* Numbered chip, echoing the rubric's circled step numbers. */
-    .chip { display: inline-grid; place-items: center; min-width: 2rem; height: 2rem; padding: 0 .35rem; border-radius: 999px;
-      border: 1.5px solid var(--accent); color: var(--accent); font-size: .75rem; font-weight: 700; }
+    .js [data-in] { opacity: 0; }
+    .js [data-split] .w { opacity: 0; }
 
-    /* Outlined ghost numeral. */
-    .ghost { position: absolute; right: -2vw; bottom: -6vw; font-weight: 900; letter-spacing: -0.06em; line-height: .8;
-      font-size: clamp(14rem, 44vw, 60rem); color: transparent; -webkit-text-stroke: 1.5px rgba(89, 95, 255, .16); pointer-events: none; user-select: none; }
+    /* ---------- Ledgers (no cards: rules + whitespace) ---------- */
+    .ledger { list-style: none; margin: 0; padding: 0; }
+    .ledger > li { display: grid; grid-template-columns: clamp(2.25rem, 5vw, 5rem) 1fr auto; gap: clamp(.75rem, 2vw, 2rem); align-items: baseline;
+      border-top: 1px solid var(--line); padding: clamp(.95rem, 2.2svh, 1.6rem) 0; }
+    .ledger > li:last-child { border-bottom: 1px solid var(--line); }
+    .ledger .n { font-size: .8rem; font-weight: 500; letter-spacing: .12em; color: var(--mut); }
+    .row-t { font-size: clamp(1.9rem, 4vw, 4.4rem); line-height: 1; }
+    .row-r { text-align: right; max-width: 30ch; }
+    .price { font-size: clamp(1.9rem, 3.8vw, 4rem); line-height: 1; white-space: nowrap; margin: 0; }
+    .price small { font-family: 'Geist', sans-serif; font-size: .8rem; letter-spacing: 0; color: var(--mut); margin-left: .5rem; }
+    .dot { display: inline-block; width: .6rem; height: .6rem; border-radius: 50%; background: var(--accent); margin-right: .7rem; vertical-align: .12em; }
 
-    /* ---------- Cards / grids ---------- */
-    .card { border: 1px solid var(--line); border-radius: 14px; padding: .85rem 1rem; background: #F7F8FF; box-shadow: 0 1px 2px rgba(17, 24, 39, .04); }
-    .card--hot { border-color: var(--accent); background: #EEF0FF; }
-    .grid-auto { display: grid; gap: .75rem; margin-top: 1.1rem; }
-    @media (min-width: 768px) { .grid-auto { gap: 1rem; } }
+    /* ---------- Slide-specific layout ---------- */
+    .s1 { justify-content: space-between; padding-top: clamp(5.5rem, 10svh, 7rem); }
+    .logo-stage { perspective: 1400px; display: grid; place-items: center; --sx: -40%; }
+    .logo-zoom, .logo-tilt { display: grid; place-items: center; transform-style: preserve-3d; }
+    .logo-img { grid-area: 1 / 1; display: block; width: auto; height: clamp(14rem, 50svh, 34rem); max-width: 92vw; user-select: none; -webkit-user-drag: none; }
+    .logo-shine { filter: brightness(0) invert(1); pointer-events: none;
+      -webkit-mask-image: linear-gradient(100deg, transparent calc(var(--sx) - 12%), rgba(0,0,0,.9) var(--sx), transparent calc(var(--sx) + 12%));
+              mask-image: linear-gradient(100deg, transparent calc(var(--sx) - 12%), rgba(0,0,0,.9) var(--sx), transparent calc(var(--sx) + 12%)); }
+    .founders { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem 1.5rem; }
+    .founders li { border-top: 1px solid var(--line); padding-top: .85rem; font-size: clamp(.9rem, 1.15vw, 1.1rem); font-weight: 500; }
+    .founders li span { display: block; color: var(--mut); font-weight: 400; font-size: .8rem; letter-spacing: .04em; margin-top: .15rem; }
+    .cue { position: absolute; right: var(--gutter); top: clamp(5.5rem, 10svh, 7rem); display: flex; align-items: center; gap: .9rem; font-size: .7rem; letter-spacing: .2em; text-transform: uppercase; font-weight: 500; opacity: 0; }
+    .cue i { display: block; width: 3.5rem; height: 1px; background: var(--accent); transform-origin: left; }
 
-    /* ---------- TRACK MATTE (slides 5 & 9) ---------- */
-    /* The section is a deep-indigo field; the white slide (.matte) is revealed through an expanding circle,
-       so the iris reads clearly against the white deck and ends as a clean dark-on-white layout.
-       Both clip-path prefixes are declared so Safari/iOS behave identically; GSAP animates `clipPath`
-       and mirrors it to the -webkit- property each tick. */
-    .slide[data-type="matte"] { background: var(--matte-field); }
-    .matte {
-      background: var(--white);
-      -webkit-clip-path: circle(0% at 50% 50%);
-              clip-path: circle(0% at 50% 50%);
-      will-change: clip-path;
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.5rem, 3vw, 3rem); margin-top: clamp(2rem, 6svh, 4.5rem); }
+    .stats > div { border-top: 1px solid var(--ink); padding-top: 1.1rem; }
+    .stat-n { font-size: clamp(2.6rem, 5.4vw, 6rem); line-height: 1; margin: 0; }
+    .stat-n--s { font-size: clamp(1.9rem, 3.5vw, 3.9rem); white-space: nowrap; padding-top: .5em; }
+
+    .compete { margin-top: clamp(1.75rem, 5svh, 3.5rem); }
+    .compete .ledger > li { grid-template-columns: 1.1fr 1fr; padding: .85rem 0; }
+    .compete b { font-weight: 500; }
+
+    .fly { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(2rem, 6vw, 7rem); align-items: center; }
+    .fly svg { width: 100%; height: auto; max-height: 64svh; overflow: visible; display: block; }
+    .legend { list-style: none; margin: clamp(1.5rem, 4svh, 2.75rem) 0 0; padding: 0; counter-reset: l; }
+    .legend li { counter-increment: l; display: grid; grid-template-columns: 2.25rem 1fr; border-top: 1px solid var(--line); padding: .65rem 0; font-size: clamp(.95rem, 1.15vw, 1.1rem); }
+    .legend li::before { content: counter(l, decimal-leading-zero); font-size: .75rem; font-weight: 500; letter-spacing: .12em; color: var(--mut); padding-top: .2rem; }
+    .legend li:last-child { border-bottom: 1px solid var(--line); }
+
+    .team { display: grid; grid-template-columns: repeat(4, 1fr); gap: clamp(1.25rem, 2.6vw, 3rem); margin-top: clamp(2rem, 6svh, 4.5rem); }
+    .team > article { border-top: 1px solid var(--ink); padding-top: 1.1rem; display: flex; flex-direction: column; gap: .55rem; }
+    .team h3 { font-size: clamp(1.7rem, 2.6vw, 2.8rem); line-height: 1; }
+    .role { font-size: .7rem; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; }
+    .edu { font-size: .78rem; letter-spacing: .03em; color: var(--mut); margin: auto 0 0; padding-top: .6rem; }
+
+    .pair { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1rem, 4vw, 5rem); align-items: end; }
+    .pair .cap { margin: clamp(.9rem, 2.4svh, 1.6rem) 0 0; font-size: clamp(1rem, 1.6vw, 1.5rem); font-weight: 500; letter-spacing: -.005em; }
+    .tag { display: inline-block; background: var(--accent); color: var(--paper); font-size: .66rem; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; padding: .4rem .75rem; border-radius: 999px; }
+    .proof { margin: clamp(1.5rem, 4svh, 3rem) 0 0; border-top: 1px solid var(--line); padding-top: 1rem; display: flex; flex-wrap: wrap; gap: .4rem 2rem; font-size: clamp(.82rem, 1vw, .98rem); color: var(--mut); }
+
+    .status { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 6vw, 7rem); align-items: end; margin-top: clamp(1.75rem, 5svh, 3.5rem); }
+    .status .ledger > li { grid-template-columns: 1.6rem 1fr; gap: 1rem; padding: .9rem 0; }
+    .mk { width: .85rem; height: .85rem; border-radius: 50%; border: 1.5px solid var(--ink); margin-top: .35rem; display: block; }
+    .mk--done { background: var(--ink); }
+    .mk--now { background: var(--accent); border-color: var(--accent); }
+    .curve .legend-row { display: flex; justify-content: space-between; gap: 1rem; margin-top: .75rem; font-size: .8rem; color: var(--mut); }
+
+    .ask-n { font-size: clamp(3.1rem, 9vw, 10.5rem); line-height: .94; margin: 0; }
+    .alloc { list-style: none; margin: clamp(2rem, 6svh, 4rem) 0 0; padding: 0; display: grid; grid-template-columns: 25fr 35fr 10fr 15fr 15fr; gap: 6px; }
+    .alloc li { display: flex; flex-direction: column; gap: .6rem; min-width: 0; }
+    .alloc .bar { display: block; height: .9rem; background: var(--paper); opacity: .3; transform-origin: left center; }
+    .alloc .hot .bar { opacity: 1; }
+    .alloc .amt { font-size: clamp(1.3rem, 2.3vw, 2.4rem); line-height: 1; }
+    .alloc .nm { font-size: clamp(.78rem, .95vw, .95rem); line-height: 1.3; }
+    .alloc .hot .nm { font-weight: 600; }
+
+    .sum { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(1.25rem, 3vw, 3rem); margin-top: clamp(1.5rem, 5svh, 3.5rem); }
+    .sum > div { border-top: 1px solid var(--line); padding-top: 1rem; }
+    .sum .stat-n { font-size: clamp(2.6rem, 5.6vw, 6.25rem); }
+
+    /* ---------- Giant magnetic CTA (button-in-button) ---------- */
+    .cta-zone { display: block; width: min(100%, 66rem); margin: clamp(2rem, 6svh, 4.5rem) auto 0; padding: .8rem; position: relative; }
+    .cta { position: relative; display: inline-flex; align-items: center; justify-content: space-between; gap: clamp(1.25rem, 3vw, 3rem);
+      width: 100%; padding: clamp(1.1rem, 2.6vw, 2.25rem) clamp(1.1rem, 2.6vw, 2.25rem) clamp(1.1rem, 2.6vw, 2.25rem) clamp(1.75rem, 4.5vw, 4rem);
+      border-radius: 999px; border: 1px solid rgba(250,248,245,.55); color: var(--paper); text-decoration: none; overflow: hidden; isolation: isolate;
+      transition: border-color .6s var(--expo), transform .4s var(--expo); }
+    .cta:active { transform: scale(.985); }
+    .cta-fill { position: absolute; inset: 0; background: var(--accent); z-index: -1; -webkit-clip-path: circle(0% at 50% 50%); clip-path: circle(0% at 50% 50%); }
+    .cta-label { font-size: clamp(1.9rem, 5.2vw, 5.25rem); line-height: 1; white-space: nowrap; }
+    .cta-ico { flex: 0 0 auto; width: clamp(3.25rem, 6.6vw, 6rem); height: clamp(3.25rem, 6.6vw, 6rem); border-radius: 50%; background: var(--paper); color: var(--ink); display: grid; place-items: center; }
+    .cta-ico svg { width: 42%; height: 42%; transition: transform .7s var(--expo); }
+    .cta:hover .cta-ico svg, .cta:focus-visible .cta-ico svg { transform: translate(18%, -18%); }
+    .cta-ring { position: absolute; inset: 0; border-radius: 999px; border: 1px solid rgba(250,248,245,.28); pointer-events: none; }
+
+    /* ---------- Floating pill nav + chapter menu ---------- */
+    .nav { position: fixed; top: clamp(.75rem, 2.2svh, 1.5rem); left: 0; right: 0; z-index: var(--z-nav); display: flex; justify-content: center; pointer-events: none; }
+    .nav-zone { display: inline-block; pointer-events: none; }
+    .nav-pill { pointer-events: auto; position: relative; display: inline-flex; align-items: center; gap: .9rem; padding: .7rem .8rem .7rem 1.25rem; border-radius: 999px; cursor: pointer;
+      border: 1px solid rgba(20,20,20,.1); background: rgba(250,248,245,.78); color: var(--ink); font: 500 .82rem/1 'Geist', sans-serif; letter-spacing: .01em;
+      -webkit-backdrop-filter: blur(18px) saturate(1.2); backdrop-filter: blur(18px) saturate(1.2); max-width: calc(100vw - 1.5rem); }
+    .nav-brand { font-weight: 600; letter-spacing: .02em; white-space: nowrap; }
+    .nav-sep { width: 1px; height: .9rem; background: rgba(20,20,20,.25); }
+    .nav-chapter { min-width: 6.5rem; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgba(20,20,20,.7); }
+    .nav-count { font-variant-numeric: tabular-nums; color: rgba(20,20,20,.7); white-space: nowrap; }
+    .nav-count b { color: var(--ink); font-weight: 600; }
+    .nav-burger { position: relative; width: 2rem; height: 2rem; border-radius: 50%; background: var(--ink); flex: 0 0 auto; }
+    .nav-burger i { position: absolute; left: 50%; top: 50%; width: .8rem; height: 1.5px; background: var(--paper); transition: transform .7s var(--expo); }
+    .nav-burger i:nth-child(1) { transform: translate(-50%, -3px); }
+    .nav-burger i:nth-child(2) { transform: translate(-50%, 3px); }
+    .nav-pill.is-menu .nav-burger i:nth-child(1) { transform: translate(-50%, 0) rotate(45deg); }
+    .nav-pill.is-menu .nav-burger i:nth-child(2) { transform: translate(-50%, 0) rotate(-45deg); }
+    .nav-progress { position: absolute; left: 1.25rem; right: 1.25rem; bottom: 0; height: 2px; background: var(--accent); transform: scaleX(0); transform-origin: left center; }
+    .menu { position: fixed; inset: 0; z-index: var(--z-menu); background: rgba(20,20,20,.94); color: var(--paper); display: none; opacity: 0;
+      -webkit-backdrop-filter: blur(28px); backdrop-filter: blur(28px); overflow-y: auto; padding: clamp(6rem, 14svh, 8rem) var(--gutter) 3rem; }
+    .menu.is-open { display: block; }
+    .menu ol { list-style: none; margin: 0 auto; padding: 0; max-width: 1100px; columns: 2; column-gap: clamp(2rem, 6vw, 6rem); }
+    .menu li { break-inside: avoid; }
+    .menu a { display: flex; align-items: baseline; gap: 1.25rem; padding: .7rem 0; border-top: 1px solid rgba(250,248,245,.2); text-decoration: none; transition: padding-left .6s var(--expo); }
+    .menu a:hover, .menu a:focus-visible { padding-left: .75rem; }
+    .menu a small { font-size: .75rem; letter-spacing: .12em; color: rgba(250,248,245,.6); font-weight: 500; min-width: 1.75rem; }
+    .menu a span { font-size: clamp(1.6rem, 3.2vw, 2.8rem); line-height: 1.1; }
+    .menu a[aria-current='true'] span { font-style: italic; }
+    .menu-close { position: fixed; }
+
+    /* ---------- Footer disclaimer ---------- */
+    #disclaimer { background: var(--paper); color: rgba(20,20,20,.62); text-align: center; border-top: 1px solid rgba(20,20,20,.12);
+      padding: 1.25rem var(--gutter) calc(1.25rem + env(safe-area-inset-bottom)); font-size: .72rem; line-height: 1.5; letter-spacing: .02em; }
+
+    /* ---------- Responsive ---------- */
+    @media (max-width: 899px) {
+      .fly, .status, .pair { grid-template-columns: 1fr; }
+      .team { grid-template-columns: 1fr 1fr; }
+      .menu ol { columns: 1; }
+      .nav-chapter { display: none; }
+      .cue { display: none; }
     }
-
-    /* ---------- Logo reveals (slides 1 & 12) — pure GSAP/CSS on LOGO_RA.svg ---------- */
-    #s1, #s12 { background: var(--white); }
-    .logo-stage { position: absolute; inset: 0; display: grid; place-items: center; }
-    .logo-stage > img, .logo-stage > .logo-layer { grid-area: 1 / 1; }
-    .logo-img { width: min(90vw, 1150px); height: auto; display: block; user-select: none; -webkit-user-drag: none; }
-
-    /* Slide 1 initial state (GSAP drives it from here; hidden so nothing flashes before it starts). */
-    #intro-stage { opacity: 0; --sx: -40%; }
-
-    /* The Light Sweep: a white-hot twin of the logo, revealed only through a soft band mask that travels
-       left -> right. The mask follows the logo's own alpha, so only the artwork catches the light
-       (a bright glint crossing the coloured letters). */
-    .logo-shine {
-      filter: brightness(0) invert(1);
-      mix-blend-mode: normal;
-      pointer-events: none;
-      -webkit-mask-image: linear-gradient(100deg, transparent calc(var(--sx) - 12%), rgba(0,0,0,.92) var(--sx), transparent calc(var(--sx) + 12%));
-              mask-image: linear-gradient(100deg, transparent calc(var(--sx) - 12%), rgba(0,0,0,.92) var(--sx), transparent calc(var(--sx) + 12%));
+    @media (max-width: 639px) {
+      .stats, .sum { grid-template-columns: 1fr; }
+      .ledger > li { grid-template-columns: 2rem 1fr; }
+      .ledger > li .price, .ledger > li .row-r { grid-column: 2; text-align: left; }
+      .compete .ledger > li { grid-template-columns: 1fr; gap: .15rem; }
+      .team { grid-template-columns: 1fr; }
+      .founders { grid-template-columns: 1fr; }
+      .alloc { grid-template-columns: 1fr; gap: 1.1rem; }
+      .alloc li { display: grid; grid-template-columns: 1fr auto; column-gap: 1rem; align-items: baseline; }
+      .alloc .bar { grid-column: 1 / -1; grid-row: 2; height: .6rem; width: calc(var(--p) * 2.8%); }
+      .alloc .nm { grid-row: 1; grid-column: 1; }
+      .alloc .amt { grid-row: 1; grid-column: 2; }
+      .cta-label { white-space: normal; }
+      .mega { font-size: clamp(6.5rem, 38vw, 12rem); }
     }
-
-    /* Slide 12 initial state; the shadow pulse is attached by GSAP once the logo has appeared. */
-    #outro-logo { opacity: 0; }
-
-    /* Scroll progress (logo-blue). */
-    #progress { position: fixed; inset: 0 0 auto 0; height: 3px; z-index: 50; background: var(--ra-500); transform: scaleX(0); transform-origin: 0 50%; pointer-events: none; }
-
-    #outro-cta { opacity: 0; }
-    @media (max-width: 767px) { .curve-lbl { display: none; } }
-
-    /* Disclaimer footer — absolute bottom of the site. */
-    #disclaimer { background: var(--white); color: var(--ink-3); text-align: center; border-top: 1px solid var(--line);
-      padding: 1.1rem 1.25rem calc(1.1rem + env(safe-area-inset-bottom)); font-size: .6875rem; line-height: 1.5; letter-spacing: .02em; }
-
-    @media (prefers-reduced-motion: reduce) { .matte { will-change: auto; } }
+    @media (prefers-reduced-motion: reduce) { .matte { will-change: auto; } .cta, .menu a { transition: none; } }
   </style>
-  <noscript><style>.cut, #outro-cta { opacity: 1 !important; } .matte { -webkit-clip-path: none !important; clip-path: none !important; } #intro-stage, #outro-logo { opacity: 1 !important; }</style></noscript>
+  <noscript><style>.js [data-in], .js [data-split] .w { opacity: 1 !important; } .matte { -webkit-clip-path: none !important; clip-path: none !important; } .cue { opacity: 1; }</style></noscript>
 </head>
 
-<body class="bg-white text-ink antialiased">
-  <div id="progress" aria-hidden="true"></div>
+<body>
+  <a class="skip" href="#deck">Skip to content</a>
+
+  <!-- Floating island nav -->
+  <header class="nav" id="nav">
+    <div class="nav-zone" id="navZone">
+      <button class="nav-pill" id="navBtn" type="button" aria-expanded="false" aria-controls="menu" aria-label="Open chapter menu">
+        <span class="nav-brand">Revenue Academy</span>
+        <span class="nav-sep" aria-hidden="true"></span>
+        <span class="nav-chapter" id="navChapter" aria-live="polite">Title</span>
+        <span class="nav-count"><b id="navIdx">01</b> / 12</span>
+        <span class="nav-burger" aria-hidden="true"><i></i><i></i></span>
+        <span class="nav-progress" id="navProg" aria-hidden="true"></span>
+      </button>
+    </div>
+  </header>
+  <nav class="menu" id="menu" aria-label="Chapters"><ol id="menuList"></ol></nav>
 
   <main id="deck">
 
-    <!-- ===================== 01 — TITLE / HOOK (GSAP logo reveal on LOGO_RA.svg) ===================== -->
-    <section id="s1" class="slide" data-type="intro" aria-label="Revenue Academy — intro">
-      <div id="intro-stage" class="logo-stage">
-        <img class="logo-img" src="LOGO_RA.svg" alt="Revenue Academy" />
-        <img class="logo-img logo-shine" src="LOGO_RA.svg" alt="" aria-hidden="true" />
-      </div>
-      <div id="scroll-cue" class="mono absolute bottom-6 left-1/2 -translate-x-1/2 text-[11px] text-gray-600 flex flex-col items-center gap-2 pointer-events-none" style="opacity:0">
-        <span>Scroll</span><span class="block h-8 w-px bg-ra-500"></span>
-      </div>
-    </section>
-
-    <!-- ===================== 02 — PROBLEM ===================== -->
-    <section id="s2" class="slide" data-type="cut" aria-labelledby="s2-title">
-      <div class="cut shell">
-        <span class="ghost" aria-hidden="true">02</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">2</span>02 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Problem</p>
-          <h2 id="s2-title" class="h1x">Traditional education <em>fails.</em></h2>
-          <p class="support">Legacy education and financial institutions don't teach actionable wealth creation, so young Indonesians fall back on recycled PDFs and signal groups.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== 03 — SOLUTION ===================== -->
-    <section id="s3" class="slide" data-type="cut" aria-labelledby="s3-title">
-      <div class="cut shell">
-        <span class="ghost" aria-hidden="true">03</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">3</span>03 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Solution</p>
-          <h2 id="s3-title" class="h1x h1x--m">Tiered <em>Discord</em> environment.</h2>
-          <p class="support">Immediate actionable execution frameworks, delivered inside a gated, AI-moderated community.</p>
-          <div class="grid-auto md:grid-cols-2">
-            <article class="card">
-              <p class="lbl">Tier 1 · Execution Base</p>
-              <p class="num mt-1">IDR 225k<span class="text-base font-medium text-gray-500"> /mo</span></p>
-              <p class="small mt-2">Async execution modules, foundational templates and a 24/7 AI-moderated community space.</p>
-            </article>
-            <article class="card card--hot">
-              <p class="lbl">Tier 2 · Inner Circle</p>
-              <p class="num mt-1">IDR 475k<span class="text-base font-medium text-gray-500"> /mo</span></p>
-              <p class="small mt-2">Everything in Tier 1, plus 4 live AMAs a month with verified practitioners, closed networking and advanced templates.</p>
-            </article>
+    <!-- ===================== 01 · TITLE ===================== -->
+    <section id="s1" class="slide slide--paper s1" data-type="intro" data-title="Title" aria-label="Revenue Academy">
+      <h1 class="sr-only">Revenue Academy</h1>
+      <div class="logo-stage" id="logoStage">
+        <div class="logo-zoom" id="logoZoom">
+          <div class="logo-tilt" id="logoTilt">
+            <img class="logo-img" src="LOGO_RA.svg" alt="Revenue Academy logo" />
+            <img class="logo-img logo-shine" src="LOGO_RA.svg" alt="" aria-hidden="true" />
           </div>
         </div>
       </div>
+      <div class="wrap">
+        <p class="eyebrow" data-in><span>Business plan pitch</span><i class="hair"></i><span>UPH College · Group 7</span></p>
+        <div class="pair" style="align-items:end">
+          <p class="serif d3" data-split>The anti-university for <em>digital income.</em></p>
+          <ul class="founders" aria-label="Founders">
+            <li data-in>Emily Deviandra Gunawan<span>COO &amp; Head of Product</span></li>
+            <li data-in>Eudia Sharon Suhermawan<span>CMO &amp; Creative Director</span></li>
+            <li data-in>George Caleb Gill<span>CEO &amp; Head of Growth</span></li>
+            <li data-in>Shalom Gracia Hanata<span>CCO &amp; Head of Brand Identity</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="cue" id="cue" aria-hidden="true"><span>Scroll</span><i></i></div>
     </section>
 
-    <!-- ===================== 04 — OPPORTUNITY & TARGET MARKET ===================== -->
-    <section id="s4" class="slide" data-type="cut" aria-labelledby="s4-title">
-      <div class="cut shell">
-        <span class="ghost" aria-hidden="true">04</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">4</span>04 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Opportunity &amp; Target Market</p>
-          <h2 id="s4-title" class="h1x h1x--m">Millennials <em>and Gen-Z.</em></h2>
-          <p class="support">Ambitious Indonesians seeking alternative digital income, segmented by drive for status, upward mobility and execution.</p>
-          <div class="grid-auto md:grid-cols-3">
-            <article class="card">
-              <p class="lbl">Indonesian EdTech, 2026 → 2034</p>
-              <p class="num mt-1">USD 4.23B → 10.04B</p>
-              <p class="small mt-1">11.42% CAGR</p>
-            </article>
-            <article class="card">
-              <p class="lbl">Online in Indonesia</p>
-              <p class="num mt-1">212M</p>
-              <p class="small mt-1">74.6% internet penetration</p>
-            </article>
-            <article class="card">
-              <p class="lbl">Capital-market investors</p>
-              <p class="num mt-1">13.07M</p>
-              <p class="small mt-1">H1 2024, led by Millennials and Gen-Z</p>
-            </article>
-          </div>
-          <p class="mono text-[10px] text-gray-500 mt-3">Sources: IMARC Group 2025 · We Are Social 2025 · KSEI 2024</p>
+    <!-- ===================== 02 · PROBLEM (ink) ===================== -->
+    <section id="s2" class="slide slide--ink" data-title="Problem" aria-labelledby="s2-t">
+      <div class="wrap">
+        <p class="eyebrow" data-in><span>02</span><i class="hair"></i><span>Problem</span></p>
+        <h2 id="s2-t" class="serif d1" data-split>Traditional education <em>fails</em> to teach digital wealth creation<span class="acc">.</span></h2>
+        <div style="margin-top:clamp(2rem,6svh,4.5rem);max-width:44rem" data-in>
+          <p class="lead">Legacy schools and institutions teach theory. Young Indonesians are left with recycled PDFs and signal groups, and they pay for the difference with their own capital.</p>
         </div>
       </div>
     </section>
 
-    <!-- ===================== 05 — TECHNOLOGY (TRACK MATTE) ===================== -->
-    <section id="s5" class="slide" data-type="matte" data-matte-end="100" aria-labelledby="s5-title">
-      <div class="matte shell">
-        <span class="ghost" aria-hidden="true">05</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">5</span>05 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Technology</p>
-          <h2 id="s5-title" class="h1x h1x--m">RAG AI bot <em>&amp; APIs.</em></h2>
-          <div class="grid-auto sm:grid-cols-2 lg:grid-cols-4">
-            <article class="card m-rise">
-              <p class="lbl">Community bot</p>
-              <p class="mt-1 font-bold tracking-tight">RAG AI moderator</p>
-              <p class="small mt-1">Custom Retrieval-Augmented Generation bot (OpenAI API) answers Tier 1 questions 24/7.</p>
-            </article>
-            <article class="card m-rise">
-              <p class="lbl">Access control</p>
-              <p class="mt-1 font-bold tracking-tight">Discord role bot</p>
-              <p class="small mt-1">Detects payment, issues the invite, assigns the tier role, revokes on failure.</p>
-            </article>
-            <article class="card m-rise">
-              <p class="lbl">Payments</p>
-              <p class="mt-1 font-bold tracking-tight">Midtrans / Xendit</p>
-              <p class="small mt-1">Automated recurring billing via e-wallets, QRIS and virtual accounts.</p>
-            </article>
-            <article class="card m-rise">
-              <p class="lbl">Content engine</p>
-              <p class="mt-1 font-bold tracking-tight">AI clip repurposing</p>
-              <p class="small mt-1">Live AMAs become dozens of short-form clips for the affiliate network.</p>
-            </article>
-          </div>
-        </div>
+    <!-- ===================== 03 · SOLUTION ===================== -->
+    <section id="s3" class="slide slide--paper" data-title="Solution" aria-labelledby="s3-t">
+      <div class="wrap">
+        <p class="eyebrow" data-in><span>03</span><i class="hair"></i><span>Solution · Dual-tier Discord</span></p>
+        <h2 id="s3-t" class="serif d2" data-split>A high-leverage <em>digital network.</em></h2>
+        <ol class="ledger" style="margin-top:clamp(2rem,6svh,4.5rem)">
+          <li data-in>
+            <span class="n">01</span>
+            <div><h3 class="serif row-t">Execution Base</h3><p class="body-s" style="margin-top:.6rem;max-width:34em">Asynchronous execution modules, foundational templates and a 24/7 AI-moderated community.</p></div>
+            <p class="serif price">IDR 225k<small>/ month</small></p>
+          </li>
+          <li data-in>
+            <span class="n">02</span>
+            <div><h3 class="serif row-t"><i class="dot"></i>Inner Circle</h3><p class="body-s" style="margin-top:.6rem;max-width:34em">Everything in Execution Base, plus four live AMAs a month with verified practitioners and closed networking.</p></div>
+            <p class="serif price">IDR 475k<small>/ month</small></p>
+          </li>
+        </ol>
       </div>
     </section>
 
-    <!-- ===================== 06 — COMPETITION ===================== -->
-    <section id="s6" class="slide" data-type="cut" aria-labelledby="s6-title">
-      <div class="cut shell">
-        <span class="ghost" aria-hidden="true">06</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">6</span>06 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Competition</p>
-          <h2 id="s6-title" class="h1x h1x--m">Zero-CAC distribution <em>moat.</em></h2>
-          <div class="grid-auto" role="table" aria-label="Competitive landscape">
-            <div class="card grid md:grid-cols-[1.1fr_1fr_2fr] gap-1 md:gap-4 items-baseline" role="row">
-              <p class="font-bold tracking-tight">Akademi Crypto</p>
-              <p class="lbl">IDR 1.4M / month · 160+ modules</p>
-              <p class="small">Direct. Elite, premium ecosystem, priced out of most of the market.</p>
-            </div>
-            <div class="card grid md:grid-cols-[1.1fr_1fr_2fr] gap-1 md:gap-4 items-baseline" role="row">
-              <p class="font-bold tracking-tight">Hustler's University</p>
-              <p class="lbl">International benchmark</p>
-              <p class="small">Direct. Sets the standard for affiliate-driven, low-friction communities.</p>
-            </div>
-            <div class="card grid md:grid-cols-[1.1fr_1fr_2fr] gap-1 md:gap-4 items-baseline" role="row">
-              <p class="font-bold tracking-tight">Schoters · signal groups</p>
-              <p class="lbl">Indirect</p>
-              <p class="small">Institutional EdTech and Telegram/WhatsApp groups compete for the same budget.</p>
-            </div>
-            <div class="card card--hot grid md:grid-cols-[1.1fr_1fr_2fr] gap-1 md:gap-4 items-baseline" role="row">
-              <p class="font-bold tracking-tight">Revenue Academy</p>
-              <p class="lbl text-accent">IDR 225k – 475k / month</p>
-              <p class="small !text-ink">Execution-first and affiliate-led, at an accessible local price point.</p>
-            </div>
-          </div>
+    <!-- ===================== 04 · OPPORTUNITY & TARGET MARKET ===================== -->
+    <section id="s4" class="slide slide--paper" data-title="Target market" aria-labelledby="s4-t">
+      <div class="wrap">
+        <p class="eyebrow" data-in><span>04</span><i class="hair"></i><span>Opportunity &amp; target market</span></p>
+        <h2 id="s4-t" class="serif d2" data-split>Millennials and Gen-Z buy <em>social capital</em> and <em>execution speed.</em></h2>
+        <p class="lead" style="margin-top:clamp(1.25rem,3svh,2rem)" data-in>Ambitious Indonesians looking for alternative digital income, and a network that moves as fast as they do.</p>
+        <div class="stats">
+          <div data-in><p class="serif stat-n"><span data-count="212" data-dec="0">212</span>M</p><p class="body-s" style="margin-top:.5rem">Indonesians online, 74.6% of the population</p></div>
+          <div data-in><p class="serif stat-n"><span data-count="13.07" data-dec="2">13.07</span>M</p><p class="body-s" style="margin-top:.5rem">Capital-market investors, led by Millennials and Gen-Z</p></div>
+          <div data-in><p class="serif stat-n stat-n--s">USD 4.23B <span class="mut">→</span> 10.04B</p><p class="body-s" style="margin-top:.5rem">Indonesian EdTech, 2026 to 2034 (11.42% CAGR)</p></div>
         </div>
+        <p class="body-s" style="margin-top:1.25rem;font-size:.72rem" data-in>Sources: We Are Social 2025 · KSEI 2024 · IMARC Group 2025</p>
       </div>
     </section>
 
-    <!-- ===================== 07 — MARKETING & SALES ===================== -->
-    <section id="s7" class="slide" data-type="cut" aria-labelledby="s7-title">
-      <div class="cut shell">
-        <span class="ghost" aria-hidden="true">07</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">7</span>07 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Marketing &amp; Sales</p>
-          <h2 id="s7-title" class="h1x h1x--m">25% recurring affiliate <em>network.</em></h2>
-          <p class="support">Decentralized, performance-based marketing: affiliates are paid only when a new subscriber pays.</p>
-          <ol class="grid-auto md:grid-cols-5 !mt-5">
-            <li class="card"><p class="lbl">01</p><p class="mt-1 font-bold tracking-tight">Short-form clip</p><p class="small mt-1">TikTok / Reels from an affiliate</p></li>
-            <li class="card"><p class="lbl">02</p><p class="mt-1 font-bold tracking-tight">Link-in-bio</p><p class="small mt-1">Mobile landing page</p></li>
-            <li class="card"><p class="lbl">03</p><p class="mt-1 font-bold tracking-tight">3-minute VSL</p><p class="small mt-1">Video sales letter</p></li>
-            <li class="card"><p class="lbl">04</p><p class="mt-1 font-bold tracking-tight">Checkout</p><p class="small mt-1">GoPay, ShopeePay, QRIS</p></li>
-            <li class="card card--hot"><p class="lbl text-accent">05</p><p class="mt-1 font-bold tracking-tight">Bot onboarding</p><p class="small mt-1 !text-ink">Invite and tier role, instantly</p></li>
+    <!-- ===================== 05 · TECHNOLOGY (ink · track matte) ===================== -->
+    <section id="s5" class="slide slide--paper matte-slide" data-type="matte" data-title="Technology" aria-labelledby="s5-t">
+      <div class="matte theme-ink">
+        <div class="wrap">
+          <p class="eyebrow" data-in><span>05</span><i class="hair"></i><span>Technology · The AI stack</span></p>
+          <h2 id="s5-t" class="serif d3" data-split style="max-width:16em">Three tools run the business <em>while the founders sleep.</em></h2>
+          <ol class="ledger" style="margin-top:clamp(1.5rem,5svh,3.5rem)">
+            <li data-in><span class="n">01</span><h3 class="serif row-t">OpusClip</h3><p class="row-r body-s"><b style="color:var(--paper);font-weight:500">Automated virality.</b><br />Every live AMA becomes dozens of short-form clips.</p></li>
+            <li data-in><span class="n">02</span><h3 class="serif row-t">OpenAI RAG</h3><p class="row-r body-s"><b style="color:var(--paper);font-weight:500">24/7 moderation.</b><br />A retrieval-augmented bot answers the community, always.</p></li>
+            <li data-in><span class="n">03</span><h3 class="serif row-t">Upgrade.chat</h3><p class="row-r body-s"><b style="color:var(--paper);font-weight:500">Automated billing.</b><br />Roles granted and revoked with every payment.</p></li>
           </ol>
         </div>
       </div>
     </section>
 
-    <!-- ===================== 08 — MANAGEMENT TEAM ===================== -->
-    <section id="s8" class="slide" data-type="cut" aria-labelledby="s8-title">
-      <div class="cut shell">
-        <span class="ghost" aria-hidden="true">08</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">8</span>08 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Management Team</p>
-          <h2 id="s8-title" class="h1x h1x--m">Four founders, <em>one flat team.</em></h2>
-          <div class="grid-auto grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 !mt-4 md:!mt-5">
-            <article class="card">
-              <p class="font-bold tracking-tight text-lg leading-tight">George Caleb Gill</p>
-              <p class="lbl hidden md:block">B.Sc., MBA, CFA</p>
-              <p class="mono text-[11px] text-accent mt-1">CEO &amp; Head of Growth</p>
-              <p class="small mt-2">Ex-Associate, Sequoia Capital Southeast Asia. Exited a bootstrapped B2B SaaS startup (USD 4.2M, 2024).</p>
-              <p class="lbl hidden md:block mt-2">Stanford · Harvard Business School</p>
-            </article>
-            <article class="card">
-              <p class="font-bold tracking-tight text-lg leading-tight">Emily Deviandra Gunawan</p>
-              <p class="lbl hidden md:block">B.A., M.Fin, CFP®</p>
-              <p class="mono text-[11px] text-accent mt-1">COO &amp; Head of Product</p>
-              <p class="small mt-2">Ex-Product Manager at Stripe (APAC payments). Scaled a Discord syndicate to USD 150k MRR in 8 months.</p>
-              <p class="lbl hidden md:block mt-2">UChicago · MIT Sloan</p>
-            </article>
-            <article class="card">
-              <p class="font-bold tracking-tight text-lg leading-tight">Eudia Sharon Suhermawan</p>
-              <p class="lbl hidden md:block">B.F.A., M.Des</p>
-              <p class="mono text-[11px] text-accent mt-1">CMO &amp; Creative Director</p>
-              <p class="small mt-2">Ex-Senior Art Director, Ogilvy Jakarta. Lifted an EdTech platform's landing-page conversion 310% in 30 days.</p>
-              <p class="lbl hidden md:block mt-2">RISD · Carnegie Mellon</p>
-            </article>
-            <article class="card">
-              <p class="font-bold tracking-tight text-lg leading-tight">Shalom Gracia Hanata</p>
-              <p class="lbl hidden md:block">B.A., M.A.</p>
-              <p class="mono text-[11px] text-accent mt-1">CCO &amp; Head of Brand Identity</p>
-              <p class="small mt-2">Ex-Lead Community Architect, top-tier NFT project. Cut monthly community churn from 22% to 4% in 6 months.</p>
-              <p class="lbl hidden md:block mt-2">Yale · King's College London</p>
-            </article>
-          </div>
+    <!-- ===================== 06 · COMPETITION ===================== -->
+    <section id="s6" class="slide slide--paper" data-title="Competition" aria-labelledby="s6-t">
+      <div class="wrap">
+        <p class="eyebrow" data-in><span>06</span><i class="hair"></i><span>Competition</span></p>
+        <h2 id="s6-t" class="serif d3" data-split style="font-size:clamp(2.1rem,4.7vw,5.25rem);max-width:22em">Just as <em>Schoters</em> organized the fragmented study-abroad market, <em>Revenue Academy</em> organizes and dominates the digital income market.</h2>
+        <div class="compete">
+          <ol class="ledger">
+            <li data-in><b>Akademi Crypto</b><span class="body-s">IDR 1.4M a month · 160+ modules · premium, priced out of most of the market</span></li>
+            <li data-in><b>Hustler's University</b><span class="body-s">International benchmark for affiliate-driven communities</span></li>
+            <li data-in><b>Signal groups</b><span class="body-s">Telegram and WhatsApp: low price, no structure, no accountability</span></li>
+            <li data-in><b><i class="dot"></i>Revenue Academy</b><span class="body-s" style="color:var(--ink)">IDR 225k – 475k a month · execution-first · affiliate-led</span></li>
+          </ol>
         </div>
       </div>
     </section>
 
-    <!-- ===================== 09 — FINANCIAL PROJECTIONS (TRACK MATTE) ===================== -->
-    <section id="s9" class="slide" data-type="matte" data-matte-end="120" aria-labelledby="s9-title">
-      <div class="matte shell">
-        <span class="ghost" aria-hidden="true">09</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">9</span>09 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Financial Projections</p>
-          <h2 id="s9-title" class="h1x h1x--m">Unit economics, <em>proven.</em></h2>
-          <div class="grid-auto lg:grid-cols-[1fr_1fr_1fr_1.25fr] sm:grid-cols-2 !mt-4 md:!mt-5">
-            <article class="card m-rise">
-              <p class="lbl">Tier 1 · Execution Base</p>
-              <p class="num mt-1">IDR 225k</p>
-              <p class="small mt-1">COGS IDR 67,500 · margin IDR 157,500</p>
-              <p class="mono text-sm mt-1">70.0% margin</p>
-            </article>
-            <article class="card m-rise">
-              <p class="lbl">Tier 2 · Inner Circle</p>
-              <p class="num mt-1">IDR 475k</p>
-              <p class="small mt-1">COGS IDR 178,125 · margin IDR 296,875</p>
-              <p class="mono text-sm mt-1">62.5% margin</p>
-            </article>
-            <article class="card m-rise">
-              <p class="lbl">Fixed costs</p>
-              <p class="num mt-1">IDR 6M</p>
-              <p class="small mt-1">per month, total</p>
-              <p class="mono text-sm mt-1">AI-run, no payroll</p>
-            </article>
-            <article class="card card--hot m-rise">
-              <p class="lbl">Break-even point</p>
-              <p class="num mt-1" style="font-size: clamp(2.5rem, 6vw, 5.5rem);"><span id="bep-count">33</span> <span class="text-base md:text-xl font-medium tracking-normal">active subscribers</span></p>
-              <p class="mono text-sm mt-1">27 Tier 1 + 6 Tier 2</p>
-            </article>
-          </div>
-          <p class="small mt-3 m-rise" style="max-width: 62rem;">Blended contribution margin (WACM) IDR 185,375 = 80% × IDR 157,500 + 20% × IDR 296,875. BEP = IDR 6,000,000 ÷ 185,375 = 32.36, rounded up to 33 active subscribers per month.</p>
+    <!-- ===================== 07 · MARKETING & SALES ===================== -->
+    <section id="s7" class="slide slide--paper" data-title="Marketing &amp; sales" aria-labelledby="s7-t">
+      <div class="wrap fly">
+        <div>
+          <p class="eyebrow" data-in><span>07</span><i class="hair"></i><span>Marketing &amp; sales</span></p>
+          <h2 id="s7-t" class="serif d2" data-split>The zero-CAC <em>affiliate flywheel.</em></h2>
+          <p class="lead" style="margin-top:clamp(1rem,2.6svh,1.75rem)" data-in>Decentralized, performance-based marketing: affiliates earn 25% recurring, and only when a new subscriber pays.</p>
+          <ol class="legend">
+            <li data-in>Live AMA is recorded</li>
+            <li data-in>AI turns it into short-form clips</li>
+            <li data-in>Affiliates post clips with their referral link</li>
+            <li data-in>Landing page, 3-minute VSL, checkout</li>
+            <li data-in>Bot onboards the member, who becomes an affiliate</li>
+          </ol>
+        </div>
+        <div data-in>
+          <svg id="flywheel" viewBox="0 0 400 400" role="img" aria-label="Five-step flywheel: AMA, clips, affiliate posts, checkout, onboarding, then back to the start">
+            <circle id="ring" cx="200" cy="200" r="150" fill="none" stroke="#141414" stroke-opacity=".7" stroke-width="1" pathLength="1" stroke-dasharray="1" />
+            <circle cx="200" cy="200" r="104" fill="none" stroke="#141414" stroke-opacity=".12" stroke-width="1" stroke-dasharray="2 6" />
+            <g id="nodes" font-family="Instrument Serif, Georgia, serif" font-size="17" text-anchor="middle">
+              <g><circle cx="200" cy="50" r="17" fill="#faf8f5" stroke="#141414"/><text x="200" y="56">1</text></g>
+              <g><circle cx="342.7" cy="153.6" r="17" fill="#faf8f5" stroke="#141414"/><text x="342.7" y="159.6">2</text></g>
+              <g><circle cx="288.2" cy="321.4" r="17" fill="#5158FE" stroke="#5158FE"/><text x="288.2" y="327.4" fill="#faf8f5">3</text></g>
+              <g><circle cx="111.8" cy="321.4" r="17" fill="#faf8f5" stroke="#141414"/><text x="111.8" y="327.4">4</text></g>
+              <g><circle cx="57.3" cy="153.6" r="17" fill="#faf8f5" stroke="#141414"/><text x="57.3" y="159.6">5</text></g>
+            </g>
+            <g id="orbit"><circle cx="350" cy="200" r="6" fill="#5158FE"/></g>
+            <text x="200" y="214" text-anchor="middle" font-family="Instrument Serif, Georgia, serif" font-size="64" fill="#141414" letter-spacing="-2">25%</text>
+            <text x="200" y="240" text-anchor="middle" font-family="Geist, sans-serif" font-size="11" letter-spacing="2" fill="#141414" fill-opacity=".64">RECURRING</text>
+          </svg>
         </div>
       </div>
     </section>
 
-    <!-- ===================== 10 — CURRENT STATUS ===================== -->
-    <section id="s10" class="slide" data-type="cut" data-draw aria-labelledby="s10-title">
-      <div class="cut shell">
-        <span class="ghost" aria-hidden="true">10</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">10</span>10 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Current Status</p>
-          <h2 id="s10-title" class="h1x h1x--m">Pre-launch <em>validation.</em></h2>
-          <p class="support">Conception complete; Discord server built; RAG bot in training. Next: a closed beta of 33 founding members, then the public launch and affiliate flywheel.</p>
-          <figure class="mt-3 md:mt-4 m-0">
-            <svg id="curve" viewBox="0 0 1000 230" class="w-full h-auto max-h-[34vh]" role="img" aria-label="Target trajectory: 33 active users at Month 2, 200 at Month 6, 1,000 by Month 12">
-              <line x1="31" y1="200" x2="969" y2="200" stroke="rgba(17,24,39,.18)" />
-              <path id="curve-area" d="M31 200 C 109 199, 156 196, 188 193 S 375 178, 500 163 S 844 90, 969 18 L 969 200 Z" fill="rgba(89,95,255,.10)" />
-              <path id="curve-line" d="M31 200 C 109 199, 156 196, 188 193 S 375 178, 500 163 S 844 90, 969 18" fill="none" stroke="#595FFF" stroke-width="4" stroke-linecap="round" pathLength="1" stroke-dasharray="1" />
-              <g class="curve-pt"><circle cx="188" cy="193" r="5" fill="#4048E8"/><text class="curve-lbl" x="188" y="176" fill="#4048E8" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">33 · M2 beta</text></g>
-              <g class="curve-pt"><circle cx="500" cy="163" r="5" fill="#4048E8"/><text class="curve-lbl" x="500" y="146" fill="#4048E8" font-size="14" text-anchor="middle" font-family="JetBrains Mono, monospace">200 · M6</text></g>
-              <g class="curve-pt"><circle cx="969" cy="18" r="6" fill="#111827"/><text class="curve-lbl" x="955" y="16" fill="#111827" font-size="15" font-weight="700" text-anchor="end" font-family="JetBrains Mono, monospace">1,000 · M12</text></g>
-              <text class="curve-lbl" x="31" y="221" fill="rgba(17,24,39,.55)" font-size="12" font-family="JetBrains Mono, monospace">M0</text>
-              <text class="curve-lbl" x="500" y="221" fill="rgba(17,24,39,.55)" font-size="12" text-anchor="middle" font-family="JetBrains Mono, monospace">M6 · flywheel compounding</text>
-              <text class="curve-lbl" x="969" y="221" fill="rgba(17,24,39,.55)" font-size="12" text-anchor="end" font-family="JetBrains Mono, monospace">M12</text>
+    <!-- ===================== 08 · MANAGEMENT TEAM ===================== -->
+    <section id="s8" class="slide slide--paper" data-title="Team" aria-labelledby="s8-t">
+      <div class="wrap">
+        <p class="eyebrow" data-in><span>08</span><i class="hair"></i><span>Management team</span></p>
+        <h2 id="s8-t" class="serif d2" data-split>Four founders, <em>one flat team.</em></h2>
+        <div class="team">
+          <article data-in><span class="role">CEO &amp; Head of Growth</span><h3 class="serif">George Caleb Gill</h3><p class="body-s">Ex-Associate at Sequoia Capital Southeast Asia. Exited a bootstrapped B2B SaaS startup (USD 4.2M, 2024).</p><p class="edu">Stanford · Harvard Business School · CFA</p></article>
+          <article data-in><span class="role">COO &amp; Head of Product</span><h3 class="serif">Emily Deviandra Gunawan</h3><p class="body-s">Ex-Product Manager at Stripe, APAC payments. Scaled a Discord syndicate to USD 150k MRR in 8 months.</p><p class="edu">University of Chicago · MIT Sloan · CFP®</p></article>
+          <article data-in><span class="role">CMO &amp; Creative Director</span><h3 class="serif">Eudia Sharon Suhermawan</h3><p class="body-s">Ex-Senior Art Director at Ogilvy Jakarta. Lifted an EdTech platform's landing-page conversion 310% in 30 days.</p><p class="edu">RISD · Carnegie Mellon</p></article>
+          <article data-in><span class="role">CCO &amp; Head of Brand Identity</span><h3 class="serif">Shalom Gracia Hanata</h3><p class="body-s">Ex-Lead Community Architect for a top-tier NFT project. Cut monthly community churn from 22% to 4% in six months.</p><p class="edu">Yale · King's College London</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 09 · FINANCIAL PROJECTIONS (ink · track matte) ===================== -->
+    <section id="s9" class="slide slide--paper matte-slide" data-type="matte" data-title="Financials" aria-labelledby="s9-t">
+      <div class="matte theme-ink">
+        <div class="wrap">
+          <p class="eyebrow" data-in><span>09</span><i class="hair"></i><span id="s9-t">Financial projections</span></p>
+          <div class="pair">
+            <div><p class="serif mega"><span data-count="70" data-dec="0">70</span>%</p><p class="cap" data-in>Gross margin</p></div>
+            <div><p class="serif mega"><span data-count="33" data-dec="0">33</span></p><p class="cap" data-in><span class="tag" style="margin-right:.75rem;vertical-align:.15em">BEP</span>users to break even</p></div>
+          </div>
+          <p class="proof" data-in><span>Tier 1 margin 70.0% · Tier 2 62.5%</span><span>Fixed costs IDR 6M a month</span><span>IDR 6,000,000 ÷ 185,375 blended contribution = 32.4, rounded up to 33</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== 10 · CURRENT STATUS ===================== -->
+    <section id="s10" class="slide slide--paper" data-title="Status" aria-labelledby="s10-t">
+      <div class="wrap">
+        <p class="eyebrow" data-in><span>10</span><i class="hair"></i><span>Current status</span></p>
+        <h2 id="s10-t" class="serif d2" data-split>Pre-launch <em>validation.</em></h2>
+        <div class="status">
+          <ol class="ledger">
+            <li data-in><i class="mk mk--done"></i><p class="body-s"><b style="color:var(--ink);font-weight:500">Conception, complete.</b> Curriculum, tier pricing, target market and affiliate model are final.</p></li>
+            <li data-in><i class="mk mk--now"></i><p class="body-s"><b style="color:var(--ink);font-weight:500">Prototype, now.</b> Discord server built; the RAG bot is training on baseline financial FAQs.</p></li>
+            <li data-in><i class="mk"></i><p class="body-s"><b style="color:var(--ink);font-weight:500">Closed beta, Month 2.</b> Onboard the first 33 founding members, then launch publicly in Month 3.</p></li>
+          </ol>
+          <div class="curve" data-in>
+            <svg viewBox="0 0 520 250" style="width:100%;height:auto;display:block;overflow:visible" role="img" aria-label="Target trajectory: 33 users at Month 2, 200 at Month 6, 1,000 at Month 12">
+              <line x1="20" y1="230" x2="500" y2="230" stroke="#141414" stroke-opacity=".2" />
+              <path id="curveLine" d="M20 230 C 60 229, 80 227, 100 223 S 200 200, 260 180 S 420 100, 500 14" fill="none" stroke="#141414" stroke-width="2" stroke-linecap="round" pathLength="1" stroke-dasharray="1" />
+              <circle id="curveDot" cx="500" cy="14" r="7" fill="#5158FE" />
             </svg>
-            <ul class="md:hidden flex justify-between gap-2 mono text-[10px] text-accent mt-2 list-none p-0">
-              <li>M2 · 33 beta</li><li>M6 · 200</li><li>M12 · 1,000</li>
-            </ul>
-            <figcaption class="mono text-[10px] text-gray-500 mt-1">Target trajectory (active users) — projection, not a forecast</figcaption>
-          </figure>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================== 11 — FINANCING SOUGHT ===================== -->
-    <section id="s11" class="slide" data-type="cut" aria-labelledby="s11-title">
-      <div class="cut shell">
-        <span class="ghost" aria-hidden="true">11</span>
-        <header class="chrome">
-          <img src="LOGO_RA_wordmark.png" alt="Revenue Academy" />
-          <span class="mono text-xs md:text-sm flex items-center gap-3"><span class="chip">11</span>11 / 12</span>
-        </header>
-        <div class="body">
-          <p class="eyebrow">Financing Sought</p>
-          <h2 id="s11-title" class="h1x h1x--m">Capital Required: <em>IDR 10M</em><span class="sub">(100% Founder Bootstrapped)</span></h2>
-          <p class="support">External ask: zero. We are rejecting outside capital to prevent early equity dilution; the PT (Perseroan Terbatas) cap table stays with the four founders.</p>
-          <div class="mt-5" role="img" aria-label="Use of IDR 10M: legal 25%, virtual office 35%, gateway and hosting 10%, content gear 15%, affiliate bounties 15%">
-            <div class="flex h-3 md:h-4 overflow-hidden rounded-full">
-              <span style="width:25%; background:#2A1F9E"></span><span style="width:35%; background:#595FFF"></span><span style="width:10%; background:#7B80FE"></span><span style="width:15%; background:#A8A9EA"></span><span style="width:15%; background:#CACCFD"></span>
-            </div>
-            <ul class="grid grid-cols-2 md:grid-cols-5 gap-x-4 gap-y-2 mt-3 list-none p-0">
-              <li><p class="lbl">IDR 2.5M</p><p class="small">PT (Perseroan Terbatas) incorporation</p></li>
-              <li><p class="lbl">IDR 3.5M</p><p class="small">Virtual office, 1 year</p></li>
-              <li><p class="lbl">IDR 1.0M</p><p class="small">Gateway deposit &amp; hosting</p></li>
-              <li><p class="lbl">IDR 1.5M</p><p class="small">Content production gear</p></li>
-              <li><p class="lbl">IDR 1.5M</p><p class="small">Initial affiliate bounties</p></li>
-            </ul>
+            <div class="legend-row"><span>Month 2 · 33 users</span><span>Month 6 · 200+</span><span>Month 12 · 1,000 (target)</span></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ===================== 12 — SUMMARY (GSAP logo reveal on LOGO_RA.svg, started by ScrollTrigger onEnter) ===================== -->
-    <section id="s12" class="slide" data-type="outro" aria-label="Revenue Academy — summary">
-      <div class="logo-stage">
-        <img id="outro-logo" class="logo-img" src="LOGO_RA.svg" alt="Revenue Academy" />
+    <!-- ===================== 11 · FINANCING SOUGHT (accent) ===================== -->
+    <section id="s11" class="slide slide--accent" data-title="Financing" aria-labelledby="s11-t">
+      <div class="wrap">
+        <p class="eyebrow" data-in><span>11</span><i class="hair"></i><span>Financing sought</span></p>
+        <h2 id="s11-t" class="serif ask-n" data-split>Financing Sought: <em style="white-space:nowrap">IDR 10,000,000</em></h2>
+        <p class="lead" style="margin-top:clamp(1.25rem,3svh,2rem)" data-in>100% founder-bootstrapped. We are choosing not to take outside capital, so no equity is diluted before break-even.</p>
+        <ul class="alloc" aria-label="Use of funds">
+          <li data-in><i class="bar" style="--p:25"></i><span class="amt serif">2.5M</span><span class="nm">Legal entity, PT (Perseroan Terbatas)</span></li>
+          <li data-in><i class="bar" style="--p:35"></i><span class="amt serif">3.5M</span><span class="nm">Virtual office, one year</span></li>
+          <li class="hot" data-in><i class="bar" style="--p:10"></i><span class="amt serif">1.0M</span><span class="nm">Gateway &amp; hosting rails</span></li>
+          <li data-in><i class="bar" style="--p:15"></i><span class="amt serif">1.5M</span><span class="nm">Content gear</span></li>
+          <li class="hot" data-in><i class="bar" style="--p:15"></i><span class="amt serif">1.5M</span><span class="nm">Affiliate bounties</span></li>
+        </ul>
+        <p class="body-s" style="margin-top:1.5rem;color:var(--paper);max-width:46em" data-in>The capital is hyper-efficient: it funds the entity, the rails and the first affiliate payouts. After that, 33 paying members cover the IDR 6M monthly run-rate.</p>
       </div>
-      <div id="outro-cta" class="absolute inset-x-0 bottom-0 p-5 md:p-10 pt-24 bg-gradient-to-t from-white to-transparent flex items-end justify-between gap-4 mono text-xs md:text-sm pointer-events-none">
-        <span class="flex items-center gap-3"><span class="chip">12</span>12 / 12 · Summary</span>
-        <span class="text-accent text-right">Questions &amp; feedback welcome</span>
+    </section>
+
+    <!-- ===================== 12 · SUMMARY ===================== -->
+    <section id="s12" class="slide slide--ink" data-title="Summary" aria-labelledby="s12-t">
+      <div class="wrap">
+        <p class="eyebrow" data-in><span>12</span><i class="hair"></i><span>Summary</span></p>
+        <h2 id="s12-t" class="serif d2" data-split>The case, in <em>three numbers.</em></h2>
+        <div class="sum">
+          <div data-in><p class="serif stat-n">70%</p><p class="body-s" style="margin-top:.5rem">Margins on Tier 1, 62.5% on Tier 2</p></div>
+          <div data-in><p class="serif stat-n">Zero-CAC</p><p class="body-s" style="margin-top:.5rem">Distribution paid for only by the members it wins</p></div>
+          <div data-in><p class="serif stat-n">33 users</p><p class="body-s" style="margin-top:.5rem">Break-even on IDR 6M of monthly fixed costs</p></div>
+        </div>
+        <div class="cta-zone" id="ctaZone" data-in>
+          <span class="cta-ring" id="ctaRing" aria-hidden="true"></span>
+          <a class="cta" id="cta" href="mailto:revenue.academy@gmail.com?subject=Revenue%20Academy%20Q%26A%20Session">
+            <span class="cta-fill" id="ctaFill" aria-hidden="true"></span>
+            <span class="serif cta-label">Open for Q&amp;A Session</span>
+            <span class="cta-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"><path d="M6 18 18 6M8 6h10v10"/></svg></span>
+          </a>
+        </div>
       </div>
     </section>
 
@@ -519,185 +503,242 @@
       gsap.registerPlugin(ScrollTrigger);
       ScrollTrigger.config({ ignoreMobileResize: true });
 
-      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      const $ = function (s, r) { return (r || document).querySelector(s); };
+      const $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+      const REVEAL_Y = 40;                              // house reveal physics: y 40, expo.out
       const CIRCLE_START = 'circle(0% at 50% 50%)';
-      const CIRCLE_END   = 'circle(150% at 50% 50%)';
+      const CIRCLE_END = 'circle(150% at 50% 50%)';
 
-      // A pitch deck always opens on Slide 1.
       if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       window.scrollTo(0, 0);
 
-      const s1 = document.getElementById('s1');
-      const s12 = document.getElementById('s12');
-      const introStage = document.getElementById('intro-stage');
-      const scrollCue = document.getElementById('scroll-cue');
-      const outroLogo = document.getElementById('outro-logo');
-      const outroCta = document.getElementById('outro-cta');
+      const slides = $$('#deck > section');
 
-      /* ================= SLIDE 1 — The Hook: camera pull-back + light sweep + handoff ================= */
-      const PULL_BACK = 2.5;   // seconds
-      const HOLD      = 1;     // seconds the finished logo is held before the handoff
-      const introTl = gsap.timeline({ paused: true });
-      if (reduceMotion) {
-        introTl.fromTo(introStage, { opacity: 0, scale: 1 }, { opacity: 1, scale: 1, duration: 0.5, ease: 'none' })
-               .to(scrollCue, { opacity: 1, duration: 0.3 });
-      } else {
-        introTl
-          // 1. Camera pull-back: massively zoomed in -> settled.
-          .fromTo(introStage,
-            { scale: 4, opacity: 0, transformOrigin: '50% 50%' },
-            { scale: 1, opacity: 1, duration: PULL_BACK, ease: 'expo.out' }, 0)
-          // 2. Light sweep: a soft mask band travels left -> right across the logo's own alpha.
-          .fromTo(introStage, { '--sx': '-40%' }, { '--sx': '140%', duration: 1.9, ease: 'power2.inOut' }, 0.8)
-          // 3. Handoff: wait 1s after the pull-back, then fade the logo out before the user reaches Slide 2.
-          .to(introStage, { opacity: 0, duration: 0.5, ease: 'none' }, PULL_BACK + HOLD)
-          .to(scrollCue, { opacity: 1, duration: 0.4, ease: 'none' }, '>');
+      /* ---------- Split text into words (keeps inline <em>) ---------- */
+      function splitWords(el) {
+        const out = [];
+        (function walk(node) {
+          Array.prototype.slice.call(node.childNodes).forEach(function (n) {
+            if (n.nodeType === 3) {
+              const frag = document.createDocumentFragment();
+              n.textContent.split(/(\s+)/).forEach(function (p) {
+                if (!p) return;
+                if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(' ')); return; }
+                const s = document.createElement('span'); s.className = 'w'; s.textContent = p; frag.appendChild(s); out.push(s);
+              });
+              n.replaceWith(frag);
+            } else if (n.nodeType === 1 && n.tagName !== 'BR') { walk(n); }
+          });
+        })(el);
+        return out;
       }
 
-      // Start once the artwork is decoded so the zoom never begins on a blank/pop-in frame.
-      const logoReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-      const decode = introStage.querySelector('img').decode ? introStage.querySelector('img').decode().catch(function () {}) : Promise.resolve();
-      Promise.race([Promise.all([decode, logoReady]), new Promise(function (r) { setTimeout(r, 1500); })]).then(function () { introTl.play(0); });
-
-      /* ================= SLIDE 12 — The Outro: rise-in + continuous pulsing glow ================= */
-      const GLOW_PEAK   = 'drop-shadow(0 4px 20px rgba(0, 0, 0, 0.15))';   // the specified premium shadow
-      const GLOW_TROUGH = 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.04))';
-      let glowTween = null;
-
-      function showCta() { gsap.to(outroCta, { opacity: 1, duration: 0.1, ease: 'none', overwrite: true }); }
-      function hideCta() { gsap.to(outroCta, { opacity: 0, duration: 0.1, ease: 'none', overwrite: true }); }
-      function resetOutro() {
-        if (glowTween) { glowTween.kill(); glowTween = null; }
-        gsap.killTweensOf(outroLogo);
-        gsap.set(outroLogo, { opacity: 0, y: 50, filter: 'none' });
-        hideCta();
+      function countTween(el, dur, ease) {
+        const target = parseFloat(el.dataset.count), dec = parseInt(el.dataset.dec || '0', 10), o = { v: 0 };
+        el.textContent = (0).toFixed(dec);
+        return gsap.to(o, { v: target, duration: dur, ease: ease, onUpdate: function () { el.textContent = o.v.toFixed(dec); } });
       }
-      function playOutro() {
-        resetOutro();
-        if (reduceMotion) {
-          gsap.set(outroLogo, { opacity: 1, y: 0, filter: GLOW_PEAK });
-          showCta();
-          return;
-        }
-        gsap.fromTo(outroLogo, { opacity: 0, y: 50 }, {
-          opacity: 1, y: 0, duration: 1.5, ease: 'power2.out',
-          onComplete: showCta,
+
+      /* ---------- Reveal timeline: hairlines draw, words rise, blocks rise, counters run ---------- */
+      function buildReveal(slide, scrub) {
+        const root = slide.querySelector('.matte') || slide;
+        const hairs = $$('.eyebrow .hair', root);
+        const splits = $$('[data-split]', root).map(splitWords);
+        const allWords = splits.reduce(function (a, b) { return a.concat(b); }, []);
+        const blocks = $$('[data-in]', root);
+        const counts = $$('[data-count]', root);
+        const tl = gsap.timeline({ paused: !scrub, defaults: { ease: scrub ? 'none' : 'expo.out' } });
+
+        if (reduce) { gsap.set(allWords.concat(blocks), { opacity: 1, y: 0 }); return tl; }
+        gsap.set(allWords, { opacity: 0, y: REVEAL_Y });
+        gsap.set(blocks, { opacity: 0, y: REVEAL_Y });
+        gsap.set(hairs, { scaleX: 0 });
+
+        tl.to(hairs, { scaleX: 1, duration: scrub ? .2 : 1.4, stagger: .08 }, 0);
+        splits.forEach(function (words, i) {
+          tl.to(words, { opacity: 1, y: 0, duration: scrub ? .3 : 1.3, stagger: scrub ? .012 : .035, ease: scrub ? 'expo.out' : 'expo.out' }, (scrub ? .02 : .1) + i * (scrub ? .02 : .12));
         });
-        // The shadow begins breathing as the logo appears and then loops continuously (peak = the specified drop-shadow).
-        glowTween = gsap.fromTo(outroLogo, { filter: GLOW_TROUGH }, {
-          filter: GLOW_PEAK, duration: 1.6, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 0.4,
-        });
-      }
-      gsap.set(outroLogo, { opacity: 0, y: 50 });
-
-      /* ================= Slide 10: hockey-stick curve ================= */
-      function buildCurveTimeline(slide) {
-        const line = slide.querySelector('#curve-line');
-        const area = slide.querySelector('#curve-area');
-        const pts = slide.querySelectorAll('.curve-pt');
-        const tl = gsap.timeline({ paused: true });
-        tl.fromTo(line, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.in' }, 0)
-          .fromTo(area, { opacity: 0 }, { opacity: 1, duration: 0.8, ease: 'none' }, 0.6)
-          .fromTo(pts, { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'none', stagger: 0.45 }, 0.5);
+        tl.to(blocks, { opacity: 1, y: 0, duration: scrub ? .25 : 1.2, stagger: scrub ? .03 : .09, ease: 'expo.out' }, scrub ? .12 : .35);
+        counts.forEach(function (c) { tl.add(countTween(c, scrub ? .35 : 1.8, scrub ? 'none' : 'expo.out'), scrub ? .2 : .5); });
         return tl;
       }
 
-      /* ================= Track matte builder (slides 5 & 9) ================= */
-      // One code path, parameterised by data-matte-end (pin length in % of viewport height).
-      //   0.00 – 0.70  circle(0%) -> circle(150%)      (the iris)
-      //   0.38 – 0.95  content rises in               (the hold: nothing is wasted)
-      //   0.55 – 0.95  BEP counter 0 -> 33            (slide 9 only)
+      /* ---------- Per-slide flourishes ---------- */
+      const extras = {
+        s7: function (tl) {
+          if (reduce) { gsap.set('#ring', { strokeDashoffset: 0 }); return; }
+          gsap.set('#ring', { strokeDashoffset: 1 });
+          gsap.set('#nodes > g', { opacity: 0, scale: .6, transformOrigin: '50% 50%' });
+          gsap.set('#orbit', { opacity: 0 });
+          tl.to('#ring', { strokeDashoffset: 0, duration: 2, ease: 'power2.inOut' }, .2)
+            .to('#nodes > g', { opacity: 1, scale: 1, duration: 1.1, stagger: .22 }, .6)
+            .to('#orbit', { opacity: 1, duration: .8 }, 1.8)
+            .add(function () { gsap.to('#orbit', { rotation: 360, svgOrigin: '200 200', duration: 14, ease: 'none', repeat: -1 }); }, 1.8);
+        },
+        s10: function (tl) {
+          if (reduce) { gsap.set('#curveLine', { strokeDashoffset: 0 }); return; }
+          gsap.set('#curveLine', { strokeDashoffset: 1 });
+          gsap.set('#curveDot', { opacity: 0, scale: 0, transformOrigin: '50% 50%' });
+          tl.to('#curveLine', { strokeDashoffset: 0, duration: 2.2, ease: 'power3.in' }, .4)
+            .to('#curveDot', { opacity: 1, scale: 1, duration: .9, ease: 'back.out(2.2)' }, 2.4);
+        },
+        s11: function (tl) {
+          if (reduce) return;
+          gsap.set('.alloc .bar', { scaleX: 0 });
+          tl.to('.alloc .bar', { scaleX: 1, duration: 1.4, stagger: .1 }, .5);
+        },
+        s12: function (tl) {
+          if (reduce) return;
+          gsap.set('#ctaRing', { opacity: 0, scale: .94 });
+          tl.to('#ctaRing', { opacity: 1, scale: 1, duration: 1.8 }, .9)
+            .add(function () { gsap.to('#ctaRing', { scale: 1.035, opacity: .5, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1 }); }, 2.6);
+        },
+      };
+
+      /* ---------- Track matte (ink circle expands over paper): slides 5 and 9 ---------- */
       function buildMatte(slide) {
-        const matte = slide.querySelector('.matte');
-        const rise = matte.querySelectorAll('.m-rise');
-        const counter = matte.querySelector('#bep-count');
-        const pinLen = parseFloat(slide.dataset.matteEnd || '100');
+        const matte = $('.matte', slide);
+        const mirror = function () { matte.style.webkitClipPath = matte.style.clipPath; };   // Safari / iOS safety net
+        if (reduce) { gsap.set(matte, { clipPath: CIRCLE_END, webkitClipPath: CIRCLE_END }); buildReveal(slide); return; }
 
-        if (reduceMotion) {
-          gsap.set(matte, { clipPath: CIRCLE_END, webkitClipPath: CIRCLE_END });
-          return;
-        }
-
-        const mirror = function () { matte.style.webkitClipPath = matte.style.clipPath; }; // Safari / iOS safety net
-
+        const content = buildReveal(slide, true);      // scrubbed content timeline, nested below
         const tl = gsap.timeline({
           defaults: { ease: 'none' },
-          scrollTrigger: {
-            trigger: slide,
-            start: 'top top',
-            end: '+=' + pinLen + '%',
-            pin: true,
-            scrub: 0.4,
-            anticipatePin: 1,
-            invalidateOnRefresh: true,
-          },
+          scrollTrigger: { trigger: slide, start: 'top top', end: '+=' + (slide.id === 's9' ? 130 : 110) + '%', pin: true, scrub: 0.4, anticipatePin: 1, invalidateOnRefresh: true },
         });
-
-        tl.fromTo(matte, { clipPath: CIRCLE_START }, { clipPath: CIRCLE_END, duration: 0.7, onUpdate: mirror, immediateRender: true }, 0);
-
-        if (rise.length) {
-          tl.fromTo(rise, { opacity: 0, y: 36 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out', stagger: 0.05 }, 0.38);
-        }
-        if (counter) {
-          const state = { v: 0 };
-          counter.textContent = '0';
-          tl.to(state, { v: 33, duration: 0.4, snap: { v: 1 }, onUpdate: function () { counter.textContent = String(state.v); } }, 0.55);
-        }
-        tl.to({}, { duration: 0.05 }, 0.95); // hold the final frame
+        tl.fromTo(matte, { clipPath: CIRCLE_START }, { clipPath: CIRCLE_END, duration: .7, onUpdate: mirror, immediateRender: true }, 0)
+          .add(content, .3)
+          .to({}, { duration: .1 }, .9);
       }
 
-      /* ================= Build triggers in DOCUMENT ORDER (pin offsets depend on it) ================= */
-      document.querySelectorAll('#deck > section').forEach(function (slide) {
-        const type = slide.dataset.type;
+      /* ---------- Magnetic hover (measures an untransformed zone) ---------- */
+      const magnets = [];
+      function magnetic(el, zone, strength) {
+        if (!finePointer || reduce) return;
+        magnets.push({ el: el, zone: zone, k: strength,
+          x: gsap.quickTo(el, 'x', { duration: .9, ease: 'expo.out' }),
+          y: gsap.quickTo(el, 'y', { duration: .9, ease: 'expo.out' }) });
+      }
+      window.addEventListener('pointermove', function (e) {
+        magnets.forEach(function (m) {
+          const r = m.zone.getBoundingClientRect(), pad = 70;
+          if (e.clientX > r.left - pad && e.clientX < r.right + pad && e.clientY > r.top - pad && e.clientY < r.bottom + pad) {
+            m.x((e.clientX - (r.left + r.width / 2)) * m.k); m.y((e.clientY - (r.top + r.height / 2)) * m.k);
+          } else { m.x(0); m.y(0); }
+        });
+      }, { passive: true });
 
-        /* ---- SLIDE 1: time-based reveal; replay if the user scrolls back up to it ---- */
-        if (type === 'intro') {
-          ScrollTrigger.create({
-            trigger: s1, start: 'top 50%', end: 'bottom 50%',
-            onLeave: function () { introTl.pause(); },
-            onEnterBack: function () { gsap.set(scrollCue, { opacity: 0 }); introTl.restart(); },
-          });
-          return;
-        }
+      /* ---------- Floating nav + chapter menu ---------- */
+      const navBtn = $('#navBtn'), menu = $('#menu'), menuList = $('#menuList');
+      const navChapter = $('#navChapter'), navIdx = $('#navIdx'), navProg = $('#navProg');
+      slides.forEach(function (s, i) {
+        const li = document.createElement('li'), a = document.createElement('a');
+        a.href = '#' + s.id; a.innerHTML = '<small>' + String(i + 1).padStart(2, '0') + '</small><span class="serif">' + s.dataset.title + '</span>';
+        a.addEventListener('click', function (e) { e.preventDefault(); closeMenu(); jumpTo(s); });
+        li.appendChild(a); menuList.appendChild(li);
+      });
+      function jumpTo(s) {
+        const holder = s.parentElement && s.parentElement.classList.contains('pin-spacer') ? s.parentElement : s;
+        window.scrollTo({ top: holder.getBoundingClientRect().top + window.scrollY, behavior: reduce ? 'auto' : 'smooth' });
+      }
+      function openMenu() {
+        menu.classList.add('is-open'); navBtn.classList.add('is-menu');
+        navBtn.setAttribute('aria-expanded', 'true'); document.documentElement.style.overflow = 'hidden';
+        gsap.fromTo(menu, { opacity: 0 }, { opacity: 1, duration: .6, ease: 'expo.out' });
+        gsap.fromTo($$('#menuList li'), { opacity: 0, y: REVEAL_Y }, { opacity: 1, y: 0, duration: 1.1, ease: 'expo.out', stagger: .045, delay: .1 });
+        const cur = $('#menuList a[aria-current="true"]') || $('#menuList a'); if (cur) cur.focus({ preventScroll: true });
+      }
+      function closeMenu() {
+        if (!menu.classList.contains('is-open')) return;
+        navBtn.classList.remove('is-menu'); navBtn.setAttribute('aria-expanded', 'false'); document.documentElement.style.overflow = '';
+        gsap.to(menu, { opacity: 0, duration: .45, ease: 'expo.out', onComplete: function () { menu.classList.remove('is-open'); } });
+        navBtn.focus({ preventScroll: true });
+      }
+      navBtn.addEventListener('click', function () { menu.classList.contains('is-open') ? closeMenu() : openMenu(); });
+      window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+      magnetic(navBtn, $('#navZone'), .12);
 
-        /* ---- SLIDES 5 & 9: track matte ---- */
-        if (type === 'matte') { buildMatte(slide); return; }
+      let activeIdx = -1;
+      function setChapter(i) {
+        if (i === activeIdx) return; activeIdx = i;
+        navIdx.textContent = String(i + 1).padStart(2, '0');
+        navChapter.textContent = slides[i].dataset.title;
+        if (!reduce) gsap.fromTo(navChapter, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: .7, ease: 'expo.out' });
+        $$('#menuList a').forEach(function (a, j) { a.setAttribute('aria-current', j === i ? 'true' : 'false'); });
+      }
+      ScrollTrigger.create({
+        start: 0, end: 'max',
+        onUpdate: function (self) {
+          navProg.style.transform = 'scaleX(' + self.progress.toFixed(4) + ')';
+          const mid = window.innerHeight * .5;
+          for (let i = 0; i < slides.length; i++) {
+            const r = slides[i].getBoundingClientRect();
+            if (r.top <= mid && r.bottom > mid) { setChapter(i); return; }
+          }
+        },
+      });
+      setChapter(0);
 
-        /* ---- Text slides: brutalist 0.1s opacity match cuts ---- */
-        if (type === 'cut') {
-          const layer = slide.querySelector('.cut');
-          const curveTl = slide.hasAttribute('data-draw') ? buildCurveTimeline(slide) : null;
-          if (curveTl && reduceMotion) curveTl.progress(1);
-          ScrollTrigger.create({
-            trigger: slide,
-            start: 'top 50%',
-            end: 'bottom 50%',   // hard handoff exactly at the viewport midline
-            onToggle: function (self) {
-              gsap.to(layer, { opacity: self.isActive ? 1 : 0, duration: reduceMotion ? 0 : 0.1, ease: 'none', overwrite: true });
-              if (curveTl && !reduceMotion) { if (self.isActive) curveTl.restart(); else curveTl.pause(0); }
-            },
-          });
-          return;
-        }
+      /* ---------- Slide 1: camera pull-back, light sweep, then the title copy ---------- */
+      const s1 = slides[0], stage = $('#logoStage'), zoom = $('#logoZoom'), tilt = $('#logoTilt'), cue = $('#cue'), nav = $('#nav');
+      const s1Text = buildReveal(s1);
+      const intro = gsap.timeline({ paused: true });
+      if (reduce) {
+        gsap.set(cue, { opacity: 1 });
+      } else {
+        gsap.set(nav, { opacity: 0, y: -24 });
+        intro
+          .fromTo(zoom, { scale: 4, opacity: 0, transformOrigin: '50% 50%' }, { scale: 1, opacity: 1, duration: 2.5, ease: 'expo.out' }, 0)
+          .fromTo(stage, { '--sx': '-40%' }, { '--sx': '140%', duration: 2, ease: 'power2.inOut' }, .8)
+          .add(function () { s1Text.play(); }, 1.5)
+          .to(nav, { opacity: 1, y: 0, duration: 1.2, ease: 'expo.out' }, 2.2)
+          .to(cue, { opacity: 1, duration: 1, ease: 'expo.out' }, 3)
+          .fromTo($('i', cue), { scaleX: 0 }, { scaleX: 1, duration: 1.4, ease: 'expo.out' }, 3.1);
+      }
+      const img = $('.logo-img', stage);
+      const decoded = img.decode ? img.decode().catch(function () {}) : Promise.resolve();
+      Promise.race([Promise.all([decoded, document.fonts ? document.fonts.ready : null]), new Promise(function (r) { setTimeout(r, 1600); })])
+        .then(function () { if (!reduce) intro.play(0); });
 
-        /* ---- SLIDE 12: no autoplay — the reveal fires only when the user arrives ---- */
-        if (type === 'outro') {
-          ScrollTrigger.create({
-            trigger: s12,
-            start: 'top 50%',    // Slide 12 fills at least half the viewport -> the reveal is actually seen
-            onEnter: playOutro,
-            onLeaveBack: resetOutro,   // scrolled back above: rewind so the reveal replays on re-entry
-          });
-        }
+      if (finePointer && !reduce) {
+        gsap.set(tilt, { transformPerspective: 1400 });
+        const rx = gsap.quickTo(tilt, 'rotationX', { duration: 1.4, ease: 'expo.out' });
+        const ry = gsap.quickTo(tilt, 'rotationY', { duration: 1.4, ease: 'expo.out' });
+        s1.addEventListener('pointermove', function (e) {
+          const r = s1.getBoundingClientRect();
+          ry(((e.clientX - r.left) / r.width - .5) * 9); rx(-((e.clientY - r.top) / r.height - .5) * 7);
+        });
+        s1.addEventListener('pointerleave', function () { rx(0); ry(0); });
+      }
+
+      /* ---------- Build the rest, in document order (pin offsets depend on it) ---------- */
+      slides.forEach(function (slide, i) {
+        if (i === 0) return;
+        if (slide.dataset.type === 'matte') { buildMatte(slide); return; }
+        const tl = buildReveal(slide);
+        if (extras[slide.id]) extras[slide.id](tl);
+        ScrollTrigger.create({ trigger: slide, start: 'top 62%', once: true, onEnter: function () { tl.play(); } });
       });
 
-      /* ---- Global scroll progress ---- */
-      gsap.to('#progress', {
-        scaleX: 1, ease: 'none',
-        scrollTrigger: { trigger: document.body, start: 'top top', end: function () { return ScrollTrigger.maxScroll(window); }, scrub: 0.2 },
-      });
+      /* ---------- Slide 12: magnetic CTA with a pointer-origin fill ---------- */
+      const cta = $('#cta'), ctaFill = $('#ctaFill');
+      magnetic(cta, $('#ctaZone'), .32);
+      function ctaFillTo(e, on) {
+        if (reduce) { gsap.set(ctaFill, { clipPath: on ? CIRCLE_END : CIRCLE_START }); return; }
+        const r = cta.getBoundingClientRect();
+        const x = e && e.clientX !== undefined ? ((e.clientX - r.left) / r.width) * 100 : 50;
+        const y = e && e.clientY !== undefined ? ((e.clientY - r.top) / r.height) * 100 : 50;
+        if (on) gsap.set(ctaFill, { clipPath: 'circle(0% at ' + x + '% ' + y + '%)' });
+        gsap.to(ctaFill, { clipPath: 'circle(' + (on ? 150 : 0) + '% at ' + x + '% ' + y + '%)', duration: on ? 1 : .8, ease: 'expo.out', overwrite: true });
+      }
+      cta.addEventListener('pointerenter', function (e) { ctaFillTo(e, true); });
+      cta.addEventListener('pointerleave', function (e) { ctaFillTo(e, false); });
+      cta.addEventListener('focus', function () { ctaFillTo(null, true); });
+      cta.addEventListener('blur', function () { ctaFillTo(null, false); });
 
-      // Web-font swaps change layout heights; re-measure every pin/trigger once they settle.
+      window.addEventListener('load', function () { ScrollTrigger.refresh(); });
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
     })();
   </script>
