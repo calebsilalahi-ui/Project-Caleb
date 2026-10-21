@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Fasting & Calorie Deficit</title>
+<style>
+  :root{
+    --ink:#1d2433; --muted:#5a6375; --bg:#fffaf3;
+    --orange:#ff7a3d; --orange-soft:#ffe6d8;
+    --teal:#13a89e; --teal-soft:#d6f3f0;
+    --purple:#6b5bd6; --purple-soft:#e7e3ff;
+    --red:#e5484d; --red-soft:#fde2e3;
+    --green:#2f9e44; --green-soft:#ddf4e1;
+    --yellow:#f6b400; --yellow-soft:#fff3cc;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{width:1200px;background:var(--bg);font-family:Inter,"DejaVu Sans",sans-serif;color:var(--ink);line-height:1.4}
+  .page{padding:48px 56px 40px}
+
+  header{background:linear-gradient(135deg,#ff7a3d 0%,#ff9f43 45%,#13a89e 100%);border-radius:28px;padding:40px 48px;color:#fff;position:relative;overflow:hidden}
+  header h1{font-size:64px;font-weight:900;letter-spacing:-1.5px;line-height:1}
+  header p.sub{font-size:22px;margin-top:12px;opacity:.95;max-width:720px}
+  .idcard{position:absolute;right:40px;top:36px;background:rgba(255,255,255,.95);color:var(--ink);border-radius:16px;padding:16px 22px;font-size:18px;min-width:290px}
+  .idcard div{display:flex;gap:10px;padding:4px 0}
+  .idcard b{width:62px;color:var(--muted);font-weight:600}
+  .idcard span{flex:1;border-bottom:2px dotted #b9bfcc;font-weight:700}
+  .hdr-plate{position:absolute;right:60px;bottom:-30px;opacity:.25}
+
+  .row{display:grid;gap:24px;margin-top:28px}
+  .two{grid-template-columns:1fr 1fr}
+  .card{background:#fff;border-radius:24px;padding:28px 30px;box-shadow:0 2px 0 rgba(29,36,51,.06),0 10px 30px rgba(29,36,51,.06);position:relative}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:40px;height:40px;border-radius:50%;color:#fff;font-weight:900;font-size:20px;margin-right:12px;flex:none}
+  .title{display:flex;align-items:center;margin-bottom:14px}
+  .title h2{font-size:28px;font-weight:800;letter-spacing:-.5px}
+  p{font-size:18px}
+  .muted{color:var(--muted)}
+  .pill{display:inline-block;padding:5px 12px;border-radius:999px;font-size:15px;font-weight:700;margin:4px 6px 0 0}
+
+  /* fasting clock */
+  .flex{display:flex;gap:22px;align-items:center}
+  .types{margin-top:14px}
+
+  /* energy balance */
+  .scale{display:flex;align-items:center;justify-content:center;gap:14px;margin:16px 0 8px}
+  .box{border-radius:16px;padding:12px 16px;text-align:center;font-weight:800;font-size:17px}
+  .box small{display:block;font-weight:600;font-size:14px;color:var(--muted)}
+  .op{font-size:34px;font-weight:900;color:var(--muted)}
+
+  /* versus table */
+  table{width:100%;border-collapse:separate;border-spacing:0 10px;font-size:18px}
+  th{font-size:20px;padding:12px 16px;color:#fff;text-align:left}
+  th:first-child{background:transparent;color:var(--muted);font-size:16px;width:20%}
+  th.f{background:var(--orange);border-radius:14px 0 0 14px}
+  th.c{background:var(--teal);border-radius:0 14px 14px 0}
+  td{padding:14px 16px;vertical-align:top}
+  td:first-child{font-weight:800;color:var(--muted);font-size:16px}
+  td.f{background:var(--orange-soft);border-radius:14px 0 0 14px}
+  td.c{background:var(--teal-soft);border-radius:0 14px 14px 0}
+  .same{margin-top:6px;background:var(--yellow-soft);border-radius:14px;padding:14px 18px;font-size:17px}
+
+  /* benefits/risks */
+  ul.list{list-style:none;margin-top:6px}
+  ul.list li{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-top:1px dashed #e3e6ee;font-size:18px}
+  ul.list li:first-child{border-top:none}
+  .ico{flex:none;width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center}
+  ul.list b{display:block;font-size:19px}
+
+  /* myths */
+  .myth{display:grid;grid-template-columns:1fr 1fr;border-radius:18px;overflow:hidden;margin-top:14px}
+  .myth > div{padding:16px 20px;font-size:17px}
+  .m{background:var(--red-soft)}
+  .t{background:var(--green-soft)}
+  .tag{font-weight:900;font-size:14px;letter-spacing:1px;display:flex;align-items:center;gap:6px;margin-bottom:4px}
+  .m .tag{color:var(--red)} .t .tag{color:var(--green)}
+
+  /* teens */
+  .teen{background:linear-gradient(135deg,#6b5bd6,#8f7ff0);color:#fff}
+  .teen p{color:#fff}
+  .tips{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:18px}
+  .tip{background:rgba(255,255,255,.14);border-radius:16px;padding:16px;text-align:center;font-size:16px;font-weight:600}
+  .tip svg{display:block;margin:0 auto 8px}
+  .why{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+  .why div{background:#fff;color:var(--ink);border-radius:16px;padding:14px 16px;font-size:16px}
+  .why b{display:block;color:var(--purple);font-size:17px;margin-bottom:2px}
+  .warn{margin-top:16px;background:rgba(0,0,0,.18);border-radius:14px;padding:14px 18px;font-size:17px}
+
+  footer{margin-top:28px;background:#fff;border-radius:20px;padding:20px 28px;font-size:14px;color:var(--muted)}
+  footer h3{font-size:16px;color:var(--ink);margin-bottom:6px}
+  footer ol{padding-left:20px}
+  footer li{margin:3px 0}
+  .disc{margin-top:8px;font-style:italic}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- HEADER -->
+  <header>
+    <h1>Fasting &amp;<br>Calorie Deficit</h1>
+    <p class="sub">What they are, how they differ, and how to stay healthy as a teenager.</p>
+    <div class="idcard">
+      <div><b>Name</b><span>&nbsp;</span></div>
+      <div><b>Class</b><span>&nbsp;</span></div>
+    </div>
+  </header>
+
+  <!-- 1 & 2 -->
+  <div class="row two">
+    <section class="card">
+      <div class="title"><span class="num" style="background:var(--orange)">1</span><h2>What is Fasting?</h2></div>
+      <div class="flex">
+        <!-- clock diagram 16:8 -->
+        <svg style="flex:none" width="150" height="150" viewBox="0 0 150 150" aria-label="16:8 fasting clock">
+          <circle cx="75" cy="75" r="62" fill="#ffe6d8"/>
+          <!-- eating window 8h = 120deg wedge, drawn teal -->
+          <path d="M75 75 L75 13 A62 62 0 0 1 128.7 106 Z" fill="#13a89e"/>
+          <circle cx="75" cy="75" r="36" fill="#fff"/>
+          <text x="75" y="72" text-anchor="middle" font-size="20" font-weight="900" fill="#1d2433">16:8</text>
+          <text x="75" y="90" text-anchor="middle" font-size="11" font-weight="700" fill="#5a6375">example</text>
+          <text x="113" y="40" text-anchor="middle" font-size="11" font-weight="800" fill="#fff">EAT</text>
+          <text x="40" y="112" text-anchor="middle" font-size="11" font-weight="800" fill="#ff7a3d">FAST</text>
+        </svg>
+        <div>
+          <p><b>Fasting</b> means choosing <b>not to eat</b> (or eating very little) for a set period of time, then eating again.</p>
+          <p class="muted" style="margin-top:8px;font-size:16px">It is about <b>WHEN</b> you eat.</p>
+        </div>
+      </div>
+      <div class="types">
+        <span class="pill" style="background:var(--orange-soft);color:#c4521f">16:8 — fast 16 h, eat in 8 h</span>
+        <span class="pill" style="background:var(--orange-soft);color:#c4521f">5:2 — eat less 2 days/week</span>
+        <span class="pill" style="background:var(--orange-soft);color:#c4521f">Religious fasting (e.g. Ramadan)</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="title"><span class="num" style="background:var(--teal)">2</span><h2>What is Calorie Deficit?</h2></div>
+      <p>A <b>calorie deficit</b> means you take in <b>fewer calories</b> (energy from food) than your body uses each day. It is about <b>HOW MUCH</b> you eat.</p>
+      <div class="scale">
+        <div class="box" style="background:var(--teal-soft)">Calories IN<small>food &amp; drinks</small></div>
+        <div class="op">&lt;</div>
+        <div class="box" style="background:var(--orange-soft)">Calories OUT<small>body + activity</small></div>
+        <div class="op">=</div>
+        <div class="box" style="background:var(--yellow-soft)">Deficit<small>body uses stored fat</small></div>
+      </div>
+      <p class="muted" style="font-size:16px"><b>How it works:</b> when food energy is not enough, the body uses its stored energy (fat) to make up the gap — so weight slowly goes down. A small deficit is safer than a big one.</p>
+    </section>
+  </div>
+
+  <!-- 3 -->
+  <section class="card" style="margin-top:28px">
+    <div class="title"><span class="num" style="background:var(--yellow)">3</span><h2>Fasting vs Calorie Deficit</h2></div>
+    <table>
+      <tr><th></th><th class="f">Fasting</th><th class="c">Calorie Deficit</th></tr>
+      <tr><td>Main focus</td><td class="f"><b>Timing</b> — when you eat</td><td class="c"><b>Amount</b> — how much energy you eat</td></tr>
+      <tr><td>Daily routine</td><td class="f">Long breaks with no food, then an eating window</td><td class="c">Regular meals, just smaller portions or lighter food</td></tr>
+      <tr><td>Weight loss?</td><td class="f">Only if it also leads to eating fewer calories overall</td><td class="c">Yes — a deficit is <i>the</i> reason weight goes down</td></tr>
+      <tr><td>Who should avoid</td><td class="f">Teens, people with diabetes, eating disorders, pregnancy</td><td class="c">Anyone going too low (crash diets), growing teens without advice</td></tr>
+    </table>
+    <div class="same"><b>Key idea:</b> fasting is one <i>way</i> to create a calorie deficit — but it is not the only way, and it is not "magic".</div>
+  </section>
+
+  <!-- 4 -->
+  <div class="row two">
+    <section class="card">
+      <div class="title"><span class="num" style="background:var(--green)">4</span><h2>Possible Benefits</h2></div>
+      <ul class="list">
+        <li><span class="ico" style="background:var(--green-soft)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2f9e44" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M14 7h7v7"/></svg></span>
+          <div><b>Healthy weight control</b>Helps adults with overweight lose weight slowly.</div></li>
+        <li><span class="ico" style="background:var(--green-soft)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2f9e44" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+          <div><b>Better heart &amp; blood sugar</b>May improve blood pressure, cholesterol and insulin levels in adults.</div></li>
+        <li><span class="ico" style="background:var(--green-soft)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2f9e44" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>
+          <div><b>Stops mindless snacking</b>A clear eating schedule can reduce late-night snacking.</div></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <div class="title"><span class="num" style="background:var(--red)">!</span><h2>Possible Risks</h2></div>
+      <ul class="list">
+        <li><span class="ico" style="background:var(--red-soft)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h8l-1 8 10-12h-8z"/></svg></span>
+          <div><b>Low energy &amp; poor focus</b>Tiredness, headaches, dizziness and bad mood ("hangry").</div></li>
+        <li><span class="ico" style="background:var(--red-soft)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c4-3 7-6.5 7-11a7 7 0 0 0-14 0c0 4.5 3 8 7 11z"/><path d="M9 11h6"/></svg></span>
+          <div><b>Missing nutrients &amp; muscle</b>Too little protein, iron or calcium; the body may lose muscle, not just fat.</div></li>
+        <li><span class="ico" style="background:var(--red-soft)">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#e5484d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></span>
+          <div><b>Unhealthy food habits</b>Overeating after fasting, or a higher risk of eating disorders.</div></li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- 5 -->
+  <section class="card" style="margin-top:28px">
+    <div class="title"><span class="num" style="background:var(--purple)">5</span><h2>Myth vs Fact</h2></div>
+    <div class="myth">
+      <div class="m"><div class="tag">✕ MYTH</div>"Skipping meals is the fastest and best way to lose weight."</div>
+      <div class="t"><div class="tag">✓ FACT</div>Weight loss depends on total calories over time. Skipping meals often leads to overeating later.</div>
+    </div>
+    <div class="myth">
+      <div class="m"><div class="tag">✕ MYTH</div>"The fewer calories I eat, the healthier I am."</div>
+      <div class="t"><div class="tag">✓ FACT</div>Eating too little slows your metabolism and causes tiredness, weak muscles and missing nutrients.</div>
+    </div>
+    <div class="myth">
+      <div class="m"><div class="tag">✕ MYTH</div>"During fasting hours I can't drink anything."</div>
+      <div class="t"><div class="tag">✓ FACT</div>In most intermittent fasting plans, water is allowed and staying hydrated is important.</div>
+    </div>
+    <div class="myth">
+      <div class="m"><div class="tag">✕ MYTH</div>"Fasting burns fat in a special way, so calories don't matter."</div>
+      <div class="t"><div class="tag">✓ FACT</div>Studies show fasting and normal calorie cutting give <b>similar</b> weight loss when total calories are the same.</div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="card teen" style="margin-top:28px">
+    <div class="title"><span class="num" style="background:#fff;color:var(--purple)">6</span><h2>Teenagers &amp; a Healthy Lifestyle</h2></div>
+    <p>Teenagers are still <b>growing</b> — bones, muscles, brain and hormones all need enough energy and nutrients every day. Extreme dieting or strict calorie restriction can do real harm:</p>
+    <div class="why">
+      <div><b>Slower growth</b>Less bone strength and height gain; possible delayed puberty or missed periods.</div>
+      <div><b>Weaker brain power</b>Poor concentration, memory and school performance; low energy for sport.</div>
+      <div><b>Mental health risk</b>Dieting in teens is linked to eating disorders and is a risk for future weight gain.</div>
+    </div>
+    <div class="tips">
+      <div class="tip">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h9"/></svg>
+        Balanced meals:<br>½ veggies &amp; fruit, ¼ protein, ¼ grains</div>
+      <div class="tip">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="4" r="2"/><path d="M4 22l4-7 3 2 2-5 4 4h3"/><path d="M9 9l3-2 2 3"/></svg>
+        Move 60 minutes<br>every day</div>
+      <div class="tip">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        Sleep 8–10<br>hours a night</div>
+      <div class="tip">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2s6 7 6 12a6 6 0 0 1-12 0c0-5 6-12 6-12z"/></svg>
+        Drink water,<br>limit sugary drinks</div>
+    </div>
+    <div class="warn"><b>Golden rule:</b> focus on healthy <b>habits</b>, not a number on the scale. Before trying any diet or fasting plan, talk to a parent, doctor or school nurse.</div>
+  </section>
+
+  <footer>
+    <h3>Sources</h3>
+    <ol>
+      <li>NHS (UK National Health Service). "Understanding calories." nhs.uk/live-well/healthy-weight/managing-your-weight/understanding-calories</li>
+      <li>Johns Hopkins Medicine. "Intermittent Fasting: What is it, and how does it work?" hopkinsmedicine.org/health/wellness-and-prevention/intermittent-fasting-what-is-it-and-how-does-it-work</li>
+      <li>Harvard T.H. Chan School of Public Health, The Nutrition Source. "Diet Review: Intermittent Fasting for Weight Loss." hsph.harvard.edu/nutritionsource/healthy-weight/diet-reviews/intermittent-fasting</li>
+      <li>Golden N.H., Schneider M., Wood C. (2016). "Preventing Obesity and Eating Disorders in Adolescents." <i>Pediatrics</i> 138(3), American Academy of Pediatrics.</li>
+      <li>World Health Organization. "Healthy diet" fact sheet; "Physical activity" fact sheet. who.int</li>
+    </ol>
+    <p class="disc">This infographic is for school learning only and is not medical advice.</p>
+  </footer>
+
+</div>
+</body>
+</html>
